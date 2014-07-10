@@ -2,7 +2,7 @@ package main
 
 import (
         "fmt"
-        "route4me"
+        "github.com/route4me/route4me-go-sdk"
 )
 
 func main() {
