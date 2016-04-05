@@ -1,5 +1,72 @@
 package route
 
+//AlgorithmType is a type of algorithm used for optimization
+type AlgorithmType uint
+
+const (
+	//TSP stands for single depot, single driver route
+	TSP AlgorithmType = iota + 1
+	//VRP stands for single depot, multiple driver, no constraints, no time windows, no capacities
+	VRP
+	//CVRP_TW_SD stands for single depot, multiple driver, capacitated, time windows
+	CVRP_TW_SD
+	//CVRP_TW_MD stands for multiple depot, multiple driver, capacitated, time windows
+	CVRP_TW_MD
+	//TSP_TW stands for single depot, single driver, time windows
+	TSP_TW
+	//TSP_TW_CR stands for single depot, single driver, time windows, continuous optimization (minimal location shifting)
+	TSP_TW_CR
+	//BBCVRP stands for shifts addresses from one route to another over time on a recurring schedule
+	BBCVRP
+)
+
+//Metric defines what system is used for computing
+type Metric uint
+
+const (
+	//Euclidean measures point to point distance as a straight line
+	Euclidean = iota + 1
+	//Manhattan measures point to point distance as taxicab geometry line
+	Manhattan
+	//Geodesic measures point to point distance approximating curvature of the earth
+	Geodesic
+	//Matrix measures point to point distance by traversing the actual road network
+	Matrix
+	//Exact2D measures point to point distance using 2d rectilinear distance
+	Exact2D
+)
+
+//DeviceType is a type of the device making a request
+type DeviceType string
+
+const (
+	Web           = "web"
+	IPhone        = "iphone"
+	IPad          = "ipad"
+	AndroidPhone  = "android_phone"
+	AndroidTablet = "android_tablet"
+)
+
+//OptimizationQuality decides how fast the optimization finishes and how accurate it is.
+type OptimizationQuality uint
+
+const (
+	//Fast generates optimized routes as quickly as possible
+	Fast OptimizationQuality = iota + 1
+	//GoodLooking generates routes that look better on a map
+	GoodLooking
+	//Best generates the shortest and quickest possible routes
+	Best
+)
+
+//DistanceUnit describes the unit which all measurements will be converted to
+type DistanceUnit string
+
+const (
+	Kilometers DistanceUnit = "km"
+	Miles      DistanceUnit = "mi"
+)
+
 type Parameters struct {
 
 	//let the R4M api know if this sdk request is coming from a file upload within your environment (for analytics)
@@ -16,14 +83,10 @@ type Parameters struct {
 
 	//the route start date in UTC, unix timestamp seconds.
 	//used to show users when the route will begin, also used for reporting and analytics
-	RouteDate long `json:"route_date,omitempty"`
+	RouteDate uint64 `json:"route_date,omitempty"`
 
 	//offset in seconds relative to the route start date (i.e. 9AM would be 60 * 60 * 9)
-	RouteTime object `json:"route_time,omitempty"`
-
-	//deprecated
-	//specify if the route can be viewed by unauthenticated users
-	SharedPublicly string `json:"shared_publicly,omitempty"`
+	RouteTime int `json:"route_time,omitempty"`
 
 	Optimize string `json:"optimize,omitempty"`
 
@@ -35,17 +98,13 @@ type Parameters struct {
 
 	VehicleMaxDistanceMI string `json:"vehicle_max_distance_mi,omitempty"`
 
-	//km or mi, the route4me api will convert all measurements into these units
-	DistanceUnit string `json:"distance_unit,omitempty"`
+	DistanceUnit DistanceUnit `json:"distance_unit,omitempty"`
 
 	TravelMode string `json:"travel_mode,omitempty"`
 
 	Avoid string `json:"avoid,omitempty"`
 
-	VehicleId string `json:"vehicle_id,omitempty"`
-
-	//deprecated, all new routes should be assigned to a member_id
-	DriverId string `json:"driver_id,omitempty"`
+	VehicleID string `json:"vehicle_id,omitempty"`
 
 	//the latitude of the device making this sdk request
 	DevLatitude float64 `json:"dev_lat,omitempty"`
@@ -64,16 +123,9 @@ type Parameters struct {
 	//type of route being created: ENUM(api,null)
 	RouteType string `json:"route_type,omitempty"`
 
-	//deprecated
 	//all routes are stored by default at this time
 	StoreRoute bool `json:"store_route,omitempty"`
 
-	//1 = ROUTE4ME_METRIC_EUCLIDEAN (use euclidean distance when computing point to point distance)
-	//2 = ROUTE4ME_METRIC_MANHATTAN (use manhattan distance (taxicab geometry) when computing point to point distance)
-	//3 = ROUTE4ME_METRIC_GEODESIC (use geodesic distance when computing point to point distance)
-	//#4 is the default and suggested metric
-	//4 = ROUTE4ME_METRIC_MATRIX (use road network driving distance when computing point to point distance)
-	//5 = ROUTE4ME_METRIC_EXACT_2D (use exact rectilinear distance)
 	Metric Metric `json:"metric,omitempty"`
 
 	//the type of algorithm to use when optimizing the route
@@ -82,10 +134,10 @@ type Parameters struct {
 	//in order for users in your organization to have routes assigned to them,
 	//you must provide their member id within the route4me system
 	//a list of member ids can be retrieved with view_users api method
-	MemberId string `json:"member_id,omitempty"`
+	MemberID string `json:"member_id,omitempty"`
 
 	//specify the ip address of the remote user making this optimization request
-	Ip string `json:"ip,omitempty"`
+	IP string `json:"ip,omitempty"`
 
 	//the method to use when compute the distance between the points in a route
 	//1 = DEFAULT (R4M PROPRIETARY ROUTING)
@@ -104,9 +156,6 @@ type Parameters struct {
 	Dirm int `json:"dirm,omitempty"`
 
 	Parts int `json:"parts,omitempty"`
-
-	//deprecated
-	DeviceID object `json:"device_id,omitempty"`
 
 	//the type of device making this request
 	//ENUM("web", "iphone", "ipad", "android_phone", "android_tablet")
@@ -147,10 +196,5 @@ type Parameters struct {
 	//the maximum number of stops permitted per created subroute
 	MaxTourSize int `json:"max_tour_size,omitempty"`
 
-	//there are 3 types of optimization qualities that are optimizations goals
-	//1 - Generate Optimized Routes As Quickly as Possible
-	//2 - Generate Routes That Look Better On A Map
-	//3 - Generate The Shortest And Quickest Possible Routes
-
-	OptimizationQuality int `json:"optimization_quality,omitempty"`
+	OptimizationQuality OptimizationQuality `json:"optimization_quality,omitempty"`
 }

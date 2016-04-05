@@ -1,4 +1,4 @@
-package route
+package data
 
 //OptimizationState describes an optimization problem can be at one state at any given time
 //every state change invokes a socket notification to the associated member id
