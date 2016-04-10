@@ -14,11 +14,12 @@ type Service struct {
 
 type getResponse struct {
 	Results []Contact `json:"results"`
+	Total   int       `json:"total"`
 }
 
-func (s *Service) Get(query *Query) ([]Contact, error) {
+func (s *Service) Get(query *Query) ([]Contact, int, error) {
 	resp := &getResponse{}
-	return resp.Results, s.Client.Do(http.MethodGet, endpoint, query, resp)
+	return resp.Results, resp.Total, s.Client.Do(http.MethodGet, endpoint, query, resp)
 }
 
 func (s *Service) Add(data *Contact) (*Contact, error) {
