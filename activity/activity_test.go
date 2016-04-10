@@ -23,7 +23,7 @@ func TestIntegrationGet(t *testing.T) {
 		return
 	}
 	if len(opts) < 1 || len(opts[0].Routes) < 1 {
-		t.Skip("Not enough routes to test setGPS")
+		t.Skip("Not enough routes to test activity stream")
 	}
 	query := &Query{
 		RouteID: opts[0].Routes[0].ID,
