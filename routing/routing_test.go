@@ -16,6 +16,7 @@ func TestIntegrationGetRoute(t *testing.T) {
 	_, err := service.GetRoute(&RouteQuery{ID: "D2B71CDCA0550779664952407DFF8712"})
 	if err != nil {
 		t.Error(err)
+		return
 	}
 }
 
@@ -26,6 +27,7 @@ func TestIntegrationGetTeamRoutes(t *testing.T) {
 	_, err := service.GetTeamRoutes(&RouteQuery{Limit: 10, Offset: 5})
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
 	//Lets try and get an array as a single route (shouldn't work)

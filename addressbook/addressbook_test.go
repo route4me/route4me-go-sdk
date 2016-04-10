@@ -80,14 +80,17 @@ func TestIntegrationRemove(t *testing.T) {
 	contacts, total, err := service.Get(query)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	removed, err := service.Delete([]string{strconv.FormatUint(contacts[0].ID, 10)})
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	_, newTotal, err := service.Get(query)
 	if total-newTotal != 1 {
 		t.Error("Tried to remove a contact, but number of contacts has not changed - rerun the test, there's a possiblity of others removing contacts from the test account.")
+		return
 	}
 	if !removed {
 		t.Error("Did not succeed in removing contacts")
@@ -105,11 +108,13 @@ func TestIntegrationUpdate(t *testing.T) {
 	contacts, _, err := service.Get(query)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	contacts[0].FirstName = "EditedName"
 	contact, err := service.Update(&contacts[0])
 	if err != nil {
 		t.Error(err)
+		return
 	}
 	if !reflect.DeepEqual(&contacts[0], contact) {
 		t.Error("Contacts do not equal")
