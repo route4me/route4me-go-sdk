@@ -1,9 +1,9 @@
-package data
+package activity
 
 type Activity struct {
 	ID        string `json:"activity_id"`
 	Type      string `json:"activity_type"`
-	Timestamp uint64 `json:"activity_timestamp,omitempty"`
+	Timestamp uint64 `json:"activity_timestamp,string,omitempty"`
 	Message   string `json:"activity_message,omitempty"`
 	RouteID   string `json:"route_destination_id,omitempty"`
 }
@@ -11,8 +11,6 @@ type Activity struct {
 type ActivityType string
 
 const (
-	DeleteDestination       ActivityType = "delete-destination"
-	InsertDestination       ActivityType = "insert-destination"
 	DeleteDestination       ActivityType = "delete-destination"
 	InsertDestination       ActivityType = "insert-destination"
 	MarkDestinationDeparted ActivityType = "mark-destination-departed"

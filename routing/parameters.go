@@ -70,7 +70,7 @@ const (
 type RouteParameters struct {
 
 	//let the R4M api know if this sdk request is coming from a file upload within your environment (for analytics)
-	IsUpload string `json:"is_upload,omitempty"`
+	IsUpload bool `json:"is_upload,omitempty"`
 
 	//the tour type of this route. rt is short for round trip, the optimization engine changes its behavior for round trip routes
 	RT bool `json:"rt,omitempty"`
@@ -115,7 +115,7 @@ type RouteParameters struct {
 	//when using a multiple driver algorithm, this is the maximum permissible duration of a generated route
 	//the optimization system will automatically create more routes when the route_max_duration is exceeded for a route
 	//however it will create an 'unrouted' list of addresses if the maximum number of drivers is exceeded
-	RouteMaxDuration int `json:"route_max_duration,omitempty"`
+	RouteMaxDuration uint64 `json:"route_max_duration,omitempty"`
 
 	//the email address to notify upon completion of an optimization request
 	RouteEmail string `json:"route_email,omitempty"`
@@ -134,10 +134,10 @@ type RouteParameters struct {
 	//in order for users in your organization to have routes assigned to them,
 	//you must provide their member id within the route4me system
 	//a list of member ids can be retrieved with view_users api method
-	MemberID string `json:"member_id,omitempty"`
+	MemberID uint64 `json:"member_id,omitempty"`
 
 	//specify the ip address of the remote user making this optimization request
-	IP string `json:"ip,omitempty"`
+	IP int64 `json:"ip,omitempty"`
 
 	//the method to use when compute the distance between the points in a route
 	//1 = DEFAULT (R4M PROPRIETARY ROUTING)

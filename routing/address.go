@@ -9,7 +9,7 @@ type AddressQuery struct {
 type Address struct {
 	RouteDestinationID    int     `json:"route_destination_id,omitempty"`
 	Alias                 string  `json:"alias"`
-	MemberID              string  `json:"member_id"`
+	MemberID              int64   `json:"member_id"`
 	AddressString         string  `json:"address"`
 	IsDepot               bool    `json:"is_depot,omitempty"`
 	Latitude              float64 `json:"lat"`

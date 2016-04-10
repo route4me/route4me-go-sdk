@@ -104,7 +104,7 @@ func (s *Service) DuplicateRoute(query *RouteQuery) (string, error) {
 
 func (s *Service) GetTeamRoutes(query *RouteQuery) ([]Route, error) {
 	resp := []Route{}
-	return resp, s.Client.Do(http.MethodGet, routeEndpoint, query, resp)
+	return resp, s.Client.Do(http.MethodGet, routeEndpoint, query, &resp)
 }
 
 func (s *Service) UpdateRoute(route *Route) (*Route, error) {

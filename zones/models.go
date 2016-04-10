@@ -12,7 +12,7 @@ type AvoidanceZone struct {
 
 type Query struct {
 	AvoidanceZone
-	DeviceID
+	DeviceID string `http:"device_id"`
 }
 
 type Territory struct {
