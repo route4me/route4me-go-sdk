@@ -1,4 +1,4 @@
-package route
+package routing
 
 //AlgorithmType is a type of algorithm used for optimization
 type AlgorithmType uint
@@ -67,7 +67,7 @@ const (
 	Miles      DistanceUnit = "mi"
 )
 
-type Parameters struct {
+type RouteParameters struct {
 
 	//let the R4M api know if this sdk request is coming from a file upload within your environment (for analytics)
 	IsUpload string `json:"is_upload,omitempty"`
@@ -159,7 +159,7 @@ type Parameters struct {
 
 	//the type of device making this request
 	//ENUM("web", "iphone", "ipad", "android_phone", "android_tablet")
-	DeviceType string `json:"device_type,omitempty"`
+	DeviceType DeviceType `json:"device_type,omitempty"`
 
 	//for routes that have trucking directions enabled, directions generated
 	//will ensure compliance so that road directions generated do not take the vehicle

@@ -1,8 +1,14 @@
-package address
+package routing
+
+type AddressQuery struct {
+	RouteID            string `http:"route_id,omitempty"`
+	RouteDestinationID int    `http:"route_destination_id,omitempty"`
+	Notes              bool   `http:"notes"`
+}
 
 type Address struct {
 	RouteDestinationID    int     `json:"route_destination_id,omitempty"`
-	Alias                 string  //`json:"alias"`
+	Alias                 string  `json:"alias"`
 	MemberID              string  `json:"member_id"`
 	AddressString         string  `json:"address"`
 	IsDepot               bool    `json:"is_depot,omitempty"`
@@ -45,7 +51,7 @@ type Address struct {
 	Time            int    `json:"time,omitempty"`
 	Notes           []Note `json:"notes,omitempty"`
 
-	Priority          int     `json:",omitempty"`
+	Priority          int     `json:"priority,omitempty"`
 	CurbsideLatitude  float64 `json:"curbside_lat"`
 	CurbsideLongitude float64 `json:"curbside_lng"`
 

@@ -1,4 +1,4 @@
-package query
+package tracking
 
 type GPS struct {
 	Format          string  `http:"format"`

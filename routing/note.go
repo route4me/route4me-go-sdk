@@ -1,4 +1,4 @@
-package address
+package routing
 
 type Note struct {
 	//NoteID
@@ -15,4 +15,13 @@ type Note struct {
 	UploadURL          string  `json:"upload_url"`
 	UploadExtension    string  `json:"upload_extension"`
 	DeviceType         string  `json:"device_type"`
+}
+
+type NoteQuery struct {
+	RouteID      string  `json:"route_id,omitempty"`
+	AddressID    int     `json:"address_id,omitempty"`
+	Latitude     float64 `json:"dev_lat"`
+	Longitude    float64 `json:"dev_lng"`
+	DeviceType   string  `json:"device_type"`
+	ActivityType string  `json:"strUpdateType"`
 }
