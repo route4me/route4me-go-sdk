@@ -1,21 +1,31 @@
 package zones
 
+import "encoding/json"
+
 type AvoidanceZone struct {
 	//AvoidanceZone ID
-	ID       string `json:"territory_id" http:"territory_id"`
-	Name     string `json:"territory_name" http:"territory_name"`
-	Color    string `json:"territory_color" http:"territory_color"`
-	MemberID string `json:"member_id" http:"member_id"`
+	ID       string      `json:"territory_id"`
+	Name     string      `json:"territory_name"`
+	Color    string      `json:"territory_color"`
+	MemberID json.Number `json:"member_id"`
 	//Territory parameters
 	Territory Territory `json:"territory"`
 }
 
 type Query struct {
-	AvoidanceZone
+	ID       string `http:"territory_id"`
 	DeviceID string `http:"device_id"`
 }
 
+type Type string
+
+const (
+	Circle    Type = "circle"
+	Polygonal Type = "poly"
+	Rectangle Type = "rect"
+)
+
 type Territory struct {
-	Type string   `json:"type"`
+	Type Type     `json:"type"`
 	Data []string `json:"data"`
 }

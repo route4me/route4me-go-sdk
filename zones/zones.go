@@ -19,7 +19,7 @@ func (s *Service) Get(query *Query) (*AvoidanceZone, error) {
 
 func (s *Service) GetAll(query *Query) ([]AvoidanceZone, error) {
 	resp := []AvoidanceZone{}
-	return resp, s.Client.Do(http.MethodGet, endpoint, query, resp)
+	return resp, s.Client.Do(http.MethodGet, endpoint, query, &resp)
 }
 
 func (s *Service) Add(data *AvoidanceZone) (*AvoidanceZone, error) {
@@ -32,6 +32,11 @@ func (s *Service) Update(data *AvoidanceZone) (*AvoidanceZone, error) {
 	return resp, s.Client.Do(http.MethodPut, endpoint, data, resp)
 }
 
-// func Delete(c *route4me.Client, data Query) (*AvoidanceZone, error) {
+type deleteResponse struct {
+	Status bool `json:"status"`
+}
 
-// }
+func (s *Service) Delete(data *Query) (bool, error) {
+	resp := &deleteResponse{}
+	return resp.Status, s.Client.Do(http.MethodDelete, endpoint, data, resp)
+}
