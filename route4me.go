@@ -35,11 +35,6 @@ func NewClient(APIKey string) *Client {
 	return NewClientWithTimeout(APIKey, defaultTimeout)
 }
 
-// func (c *Client) NewRequest(method string, url string) *http.Request {
-// 	request := http.NewRequest(method, url, nil)
-// 	request.
-// }
-
 func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([]byte, error) {
 	var reader io.Reader
 	var byt []byte
@@ -57,21 +52,19 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 		return byt, err
 	}
 	//Prepare query string
+
 	params := structToMap(data)
 	params.Add("api_key", c.APIKey)
 	request.URL.RawQuery = params.Encode()
 	//fmt.Printf("%+v", params)
 	//fmt.Printf("%+v", request)
-	// params := request.URL.Query()
-	// params.Add("api_key", c.APIKey)
-	// request.URL.RawQuery = params.Encode()
 	resp, err := c.Client.Do(request)
 	if err != nil {
 		return byt, err
 	}
 	defer resp.Body.Close()
 	byt, err = ioutil.ReadAll(resp.Body)
-
+	//fmt.Println(string(byt))
 	if resp.StatusCode != http.StatusOK {
 		return byt, InvalidStatusCode
 	}
