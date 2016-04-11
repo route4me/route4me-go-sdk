@@ -79,7 +79,7 @@ type RouteParameters struct {
 	DisableOptimization bool `json:"disable_optimization,omitempty"`
 
 	//the name of this route. this route name will be accessible in the search API, and also will be displayed on the mobile device of a user
-	RouteName string `json:"route_name,omitempty"`
+	Name string `json:"route_name,omitempty"`
 
 	//the route start date in UTC, unix timestamp seconds.
 	//used to show users when the route will begin, also used for reporting and analytics

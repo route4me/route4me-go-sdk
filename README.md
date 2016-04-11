@@ -222,5 +222,5 @@ func main() {
 ## Tests
 
 ```
-go test
+go test ./...
 ```

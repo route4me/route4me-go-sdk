@@ -29,7 +29,7 @@ type DataObject struct {
 	State            OptimizationState `json:"state,omitempty"`
 	UserErrors       []string          `json:"user_errors,omitempty"`
 	SentToBackground bool              `json:"sent_to_background,omitempty"`
-	RouteParameters  RouteParameters   `json:"parameters,omitempty"`
+	Parameters       RouteParameters   `json:"parameters,omitempty"`
 	Addresses        []Address         `json:"addresses,omitempty"`
 	Routes           []Route           `json:"routes,omitempty"`
 	Links            Links             `json:"links,omitempty"`
@@ -38,8 +38,8 @@ type DataObject struct {
 
 type Route struct {
 	DataObject
-	ID                        string  `json:"route_id,omitempty"`
-	MemberID                  uint64  `json:"member_id,omitempty"`
+	ID                        string  `json:"route_id,omitempty" http:"route_id"`
+	MemberID                  uint64  `json:"member_id,omitempty" http:"member_id"`
 	MemberEmail               string  `json:"member_email,omitempty"`
 	VehicleAlias              string  `json:"vehicle_alias,omitempty"`
 	DriverAlias               string  `json:"driver_alias,omitempty"`
@@ -56,7 +56,7 @@ type Route struct {
 type Links struct {
 	Route                 string `json:",omitempty"`
 	View                  string `json:"view,omitempty"`
-	OptimizationproblemID string `json:"optimization_problem_id,omitempty"`
+	OptimizationProblemID string `json:"optimization_problem_id,omitempty"`
 }
 
 type TravelMode string

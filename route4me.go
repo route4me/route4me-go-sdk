@@ -58,7 +58,6 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 	params := structToURLValues(data)
 	params.Add("api_key", c.APIKey)
 	request.URL.RawQuery = params.Encode()
-	//fmt.Printf("%+v\n\n\n\n", params)
 	resp, err := c.Client.Do(request)
 	if err != nil {
 		return byt, err

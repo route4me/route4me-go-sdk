@@ -62,8 +62,8 @@ func (s *Service) GetRoute(query *RouteQuery) (*Route, error) {
 }
 
 type getRouteIDRequest struct {
-	ProblemID         string `json:"optimization_problem_id"`
-	WaitForFinalState int    `json:"wait_for_final_state,string"`
+	ProblemID         string `http:"optimization_problem_id"`
+	WaitForFinalState int    `http:"wait_for_final_state,string"`
 }
 
 func (s *Service) GetRouteID(problemID string) (string, error) {
@@ -85,12 +85,12 @@ type duplicateRouteResponse struct {
 }
 
 type duplicateRouteRequest struct {
-	*RouteQuery
-	To string `json:"to,omitempty"`
+	RouteID string `http:"route_id"`
+	To      string `http:"to"`
 }
 
-func (s *Service) DuplicateRoute(query *RouteQuery) (string, error) {
-	request := &duplicateRouteRequest{RouteQuery: query, To: "none"}
+func (s *Service) DuplicateRoute(routeID string) (string, error) {
+	request := &duplicateRouteRequest{RouteID: routeID, To: "none"}
 	response := &duplicateRouteResponse{}
 	err := s.Client.Do(http.MethodGet, duplicateRouteEndpoint, request, response)
 	if err != nil {
@@ -112,20 +112,16 @@ func (s *Service) UpdateRoute(route *Route) (*Route, error) {
 	return resp, s.Client.Do(http.MethodPut, routeEndpoint, route, resp)
 }
 
-type deleteResponse struct {
-	RouteIDs []string `json:"route_ids,omitempty"`
-}
-
 type deleteRequest struct {
 	RouteID string `json:"route_id"`
 }
 
-func (s *Service) DeleteRoutes(routeIDs []string) ([]string, error) {
+func (s *Service) DeleteRoutes(routeIDs []string) ([]Route, error) {
 	request := &deleteRequest{
 		RouteID: strings.Join(routeIDs, ","),
 	}
-	resp := &deleteResponse{}
-	return resp.RouteIDs, s.Client.Do(http.MethodGet, routeEndpoint, request, resp)
+	resp := []Route{}
+	return resp, s.Client.Do(http.MethodGet, routeEndpoint, request, &resp)
 }
 
 //TODO: Add Notes and Removing/Moving destinations

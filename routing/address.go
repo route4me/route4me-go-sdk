@@ -1,30 +1,33 @@
 package routing
 
+import "encoding/json"
+
 type AddressQuery struct {
-	RouteID            string `http:"route_id,omitempty"`
-	RouteDestinationID int    `http:"route_destination_id,omitempty"`
+	RouteID            string `http:"route_id"`
+	RouteDestinationID string `http:"route_destination_id"`
 	Notes              bool   `http:"notes"`
 }
 
 type Address struct {
-	RouteDestinationID    int     `json:"route_destination_id,omitempty"`
-	Alias                 string  `json:"alias"`
-	MemberID              int64   `json:"member_id"`
-	AddressString         string  `json:"address"`
-	IsDepot               bool    `json:"is_depot,omitempty"`
-	Latitude              float64 `json:"lat"`
-	Longtitude            float64 `json:"lng"`
-	RouteID               string  `json:"route_id,omitempty"`
-	OriginalRouteID       string  `json:"original_route_id,omitempty"`
-	SequenceNo            int     `json:"sequence_no,omitempty"`
-	Geocoded              bool    `json:"geocoded,omitempty"`
-	PreferredGeocoding    bool    `json:"preferred_geocoding,omitempty"`
-	FailedGeocoding       bool    `json:"failed_geocoding,omitempty"`
-	ContactID             int     `json:"contact_id,omitempty"`
-	IsVisited             bool    `json:"is_visited,omitempty"`
-	IsDeparted            bool    `json:"is_departed,omitempty"`
-	TimestampLastVisited  uint64  `json:"timestamp_last_visited,omitempty"`
-	TimestampLastDeparted uint64  `json:"timestamp_last_departed,omitempty"`
+	RouteDestinationID    json.Number `json:"route_destination_id,omitempty" http:"route_destination_id"`
+	Alias                 string      `json:"alias"`
+	MemberID              int64       `json:"member_id"`
+	AddressString         string      `json:"address"`
+	IsDepot               bool        `json:"is_depot,omitempty"`
+	Latitude              float64     `json:"lat"`
+	Longtitude            float64     `json:"lng"`
+	RouteID               string      `json:"route_id,omitempty" http:"route_id"`
+	OriginalRouteID       string      `json:"original_route_id,omitempty"`
+	SequenceNo            int         `json:"sequence_no,omitempty"`
+	Geocoded              bool        `json:"geocoded,omitempty"`
+	PreferredGeocoding    bool        `json:"preferred_geocoding,omitempty"`
+	FailedGeocoding       bool        `json:"failed_geocoding,omitempty"`
+	ContactID             int         `json:"contact_id,omitempty"`
+	IsVisited             bool        `json:"is_visited,omitempty"`
+	IsDeparted            bool        `json:"is_departed,omitempty"`
+	TimestampLastVisited  uint64      `json:"timestamp_last_visited,omitempty"`
+	TimestampLastDeparted uint64      `json:"timestamp_last_departed,omitempty"`
+	OptimizationProblemID string      `json:"optimization_problem_id,omitempty"`
 
 	CustomerPo  string  `json:"customer_po,omitempty"`
 	InvoiceNo   string  `json:"invoide_no,omitempty"`
