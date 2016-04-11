@@ -1,5 +1,7 @@
 Access Route4Me's logistics-as-a-service API using our Go SDK
 -------------------
+[![Coverage Status](https://coveralls.io/repos/github/maciekmm/route4me-go-sdk/badge.svg?branch=master)](https://coveralls.io/github/maciekmm/route4me-go-sdk?branch=master) [![Build Status](https://travis-ci.org/maciekmm/route4me-go-sdk.svg?branch=master)](https://travis-ci.org/maciekmm/route4me-go-sdk)
+
 
 
 ### What does the Route4Me SDK permit me to do?
