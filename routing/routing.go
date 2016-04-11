@@ -34,12 +34,12 @@ func (s *Service) GetOptimizations(parameters *RouteQuery) ([]DataObject, error)
 	return resp.Optimizations, s.Client.Do(http.MethodGet, optimizationEndpoint, parameters, resp)
 }
 
-func (s *Service) RunOptimization(parameters OptimizationParameters) (*DataObject, error) {
+func (s *Service) RunOptimization(parameters *OptimizationParameters) (*DataObject, error) {
 	resp := &DataObject{}
 	return resp, s.Client.Do(http.MethodPost, optimizationEndpoint, parameters, resp)
 }
 
-func (s *Service) UpdateOptimization(parameters OptimizationParameters) (*DataObject, error) {
+func (s *Service) UpdateOptimization(parameters *OptimizationParameters) (*DataObject, error) {
 	resp := &DataObject{}
 	return resp, s.Client.Do(http.MethodPut, optimizationEndpoint, parameters, resp)
 }

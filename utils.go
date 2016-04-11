@@ -7,7 +7,7 @@ import (
 )
 
 //https://gist.github.com/tonyhb/5819315#file-main-go-L32
-func structToMap(i interface{}) url.Values {
+func structToURLValues(i interface{}) url.Values {
 	values := url.Values{}
 	iVal := reflect.ValueOf(i).Elem()
 	typ := iVal.Type()
@@ -22,21 +22,16 @@ func structToMap(i interface{}) url.Values {
 		}
 		// Convert each type into a string for the url.Values string map
 		var v string
-		switch f.Interface().(type) {
-		case int, int8, int16, int32, int64:
-			if f.Int() == 0 {
-				continue
-			}
+		switch f.Kind() {
+		case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
 			v = strconv.FormatInt(f.Int(), 10)
-		case uint, uint8, uint16, uint32, uint64:
+		case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64, reflect.Uintptr:
 			v = strconv.FormatUint(f.Uint(), 10)
-		case float32:
+		case reflect.Float32:
 			v = strconv.FormatFloat(f.Float(), 'f', 4, 32)
-		case float64:
+		case reflect.Float64:
 			v = strconv.FormatFloat(f.Float(), 'f', 4, 64)
-		case []byte:
-			v = string(f.Bytes())
-		case string:
+		case reflect.String:
 			v = f.String()
 		}
 		values.Set(tag, v)

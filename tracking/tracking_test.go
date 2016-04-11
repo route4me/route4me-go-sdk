@@ -22,11 +22,17 @@ func TestSetGPS(t *testing.T) {
 		t.Error("Error occured in external service:", err)
 		return
 	}
-	if len(opts) < 1 || len(opts[0].Routes) < 1 {
-		t.Skip("Not enough routes to test setGPS")
+	if len(opts) < 1 {
+		t.Skip("Not enough routes to test activity stream")
+	}
+	opt, err := oService.GetOptimization(&routing.OptimizationParameters{
+		ProblemID: opts[0].ProblemID,
+	})
+	if len(opt.Routes) < 1 {
+		t.Skip("Not enough routes to test activity stream")
 	}
 	query := &GPS{
-		RouteID:         opts[0].Routes[0].ID,
+		RouteID:         opt.Routes[0].ID,
 		Latitude:        33.14384,
 		Longitude:       -83.22466,
 		Course:          1,

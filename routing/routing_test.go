@@ -1,6 +1,7 @@
 package routing
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/route4me/route4me-go-sdk"
@@ -35,4 +36,65 @@ func TestIntegrationGetTeamRoutes(t *testing.T) {
 	if err == nil {
 		t.Error("Array unmarshalled into a non-array type. This shouldn't happen.")
 	}
+}
+
+func TestIntegrationGetOptimizations(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.GetOptimizations(&RouteQuery{Limit: 5})
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationGetOptimization(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	optimizations, err := service.GetOptimizations(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error("Error in external function (getOptimizations): ", err)
+		return
+	}
+	if len(optimizations) < 1 {
+		t.Skip("Not enough optimizations in the getOptimizations")
+	}
+	_, err = service.GetOptimization(&OptimizationParameters{ProblemID: optimizations[0].ProblemID})
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationUpdateOptimization(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	optimizations, err := service.GetOptimizations(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error("Error in external function (getOptimizations): ", err)
+		return
+	}
+	if len(optimizations) < 1 {
+		t.Skip("Not enough optimizations in the getOptimizations")
+	}
+
+	updated, err := service.UpdateOptimization(&OptimizationParameters{ProblemID: optimizations[0].ProblemID, Reoptimize: true})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	get, err := service.GetOptimization(&OptimizationParameters{ProblemID: optimizations[0].ProblemID})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	updated.SentToBackground = false
+	if !reflect.DeepEqual(get, updated) {
+		t.Error("Optimizations do not match")
+	}
+}
+
+func TestIntegrationRunOptimization(t *testing.T) {
+
 }

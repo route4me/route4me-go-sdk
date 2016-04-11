@@ -25,15 +25,15 @@ type TrackingHistory struct {
 }
 
 type DataObject struct {
-	OptimizationProblemID string            `json:"optimization_problem_id,omitempty"`
-	State                 OptimizationState `json:"state,omitempty"`
-	UserErrors            []string          `json:"user_errors,omitempty"`
-	SentToBackground      bool              `json:"sent_to_background,omitempty"`
-	RouteParameters       RouteParameters   `json:"parameters,omitempty"`
-	Addresses             []Address         `json:"addresses,omitempty"`
-	Routes                []Route           `json:"routes,omitempty"`
-	Links                 Links             `json:"links,omitempty"`
-	TrackingHistory       []TrackingHistory `json:"tracking_history,omitempty"`
+	ProblemID        string            `json:"optimization_problem_id,omitempty"`
+	State            OptimizationState `json:"state,omitempty"`
+	UserErrors       []string          `json:"user_errors,omitempty"`
+	SentToBackground bool              `json:"sent_to_background,omitempty"`
+	RouteParameters  RouteParameters   `json:"parameters,omitempty"`
+	Addresses        []Address         `json:"addresses,omitempty"`
+	Routes           []Route           `json:"routes,omitempty"`
+	Links            Links             `json:"links,omitempty"`
+	TrackingHistory  []TrackingHistory `json:"tracking_history,omitempty"`
 }
 
 type Route struct {

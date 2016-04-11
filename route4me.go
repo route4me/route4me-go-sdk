@@ -19,20 +19,22 @@ const (
 var InvalidStatusCode = errors.New("Invalid status code")
 
 type Client struct {
-	APIKey string
-	Client *http.Client
+	APIKey  string
+	Client  *http.Client
+	BaseURL string
 }
 
-func NewClientWithTimeout(APIKey string, timeout time.Duration) *Client {
+func NewClientWithOptions(APIKey string, timeout time.Duration, baseURL string) *Client {
 	return &Client{
-		APIKey: APIKey,
-		Client: &http.Client{Timeout: timeout},
+		APIKey:  APIKey,
+		Client:  &http.Client{Timeout: timeout},
+		BaseURL: baseURL,
 	}
 }
 
 // NewClient creates a route4me client
 func NewClient(APIKey string) *Client {
-	return NewClientWithTimeout(APIKey, defaultTimeout)
+	return NewClientWithOptions(APIKey, defaultTimeout, baseURL)
 }
 
 func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([]byte, error) {
@@ -47,24 +49,22 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 		reader = bytes.NewReader(serialized)
 	}
 
-	request, err := http.NewRequest(method, baseURL+endpoint, reader)
+	request, err := http.NewRequest(method, c.BaseURL+endpoint, reader)
 	if err != nil {
 		return byt, err
 	}
 	//Prepare query string
 
-	params := structToMap(data)
+	params := structToURLValues(data)
 	params.Add("api_key", c.APIKey)
 	request.URL.RawQuery = params.Encode()
-	//fmt.Printf("%+v", params)
-	//fmt.Printf("%+v", request)
+	//fmt.Printf("%+v\n\n\n\n", params)
 	resp, err := c.Client.Do(request)
 	if err != nil {
 		return byt, err
 	}
 	defer resp.Body.Close()
 	byt, err = ioutil.ReadAll(resp.Body)
-	//fmt.Println(string(byt))
 	if resp.StatusCode != http.StatusOK {
 		return byt, InvalidStatusCode
 	}
