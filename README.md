@@ -13,7 +13,7 @@ Then run `go get ./...` to download.
 
 ### Usage example
 
-Check [wiki](https://github.com/route4me/route4me-go-sdk/wiki)
+Check the [wiki](https://github.com/route4me/route4me-go-sdk/wiki)
 
 ### Tests
 
@@ -70,7 +70,7 @@ Yes. The API can accept lat/lng and an unlimited amount of per-address metadata.
 Yes. All routes are permanently stored in the database and are no longer accessible to you after your subscription is terminated.
 
 ### Can I incorporate your API into my mobile application?
-Route4Me’s route planning and optimization technology can only be added into applications that do not directly compete with Route4Me. 
+Route4Me’s route planning and optimization technology can only be added into applications that do not directly compete with Route4Me.
 This means the application’s primary capabilities must be unrelated to route optimization, route planning, or navigation.
 
 ### Can I pay you to develop a custom algorithm?
@@ -88,7 +88,7 @@ Because Route4Me processes all routes asynchronously, Route4Me will conveniently
 
 ### Does the Route4Me API and SDK work in my country?
 Route4Me.com, as well as all of Route4Me’s mobile applications use the Route4Me SDK’s and API.
-Since Route4Me works globally, this means that all of Route4Me’s capabilities are available using the SDK’s in every country 
+Since Route4Me works globally, this means that all of Route4Me’s capabilities are available using the SDK’s in every country
 
 
 ### Will the Route4Me API/SDK work in my program on the Mac, PC, or Linux?
