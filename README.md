@@ -1,8 +1,25 @@
 Access Route4Me's logistics-as-a-service API using our Go SDK
 -------------------
-[![Coverage Status](https://coveralls.io/repos/github/maciekmm/route4me-go-sdk/badge.svg?branch=master)](https://coveralls.io/github/maciekmm/route4me-go-sdk?branch=master) [![Build Status](https://travis-ci.org/maciekmm/route4me-go-sdk.svg?branch=master)](https://travis-ci.org/maciekmm/route4me-go-sdk)
 
+### Installation and Usage
 
+In your program import the package using
+
+```go
+import "github.com/route4me/route4me-go-sdk"
+```
+
+Then run `go get ./...` to download.
+
+## Usage example
+
+Check [wiki](https://github.com/route4me/route4me-go-sdk/wiki)
+
+## Tests
+
+```
+go test ./...
+```
 
 ### What does the Route4Me SDK permit me to do?
 This SDK makes it easier for you use the Route4Me API, which creates optimally sequenced driving routes for many drivers.
@@ -13,13 +30,11 @@ The service is typically used by organizations who must route many drivers to ma
 ### Who is prohibited from using the Route4Me SDK (and API)?
 The Route4Me SDK and API cannot be resold or used in a product or system that competes directly with Route4Me. This means that developers cannot resell route optimization services to other businesses or developers. However, developers can integrate our route optimization SDK/API into their software applications. Developers and startups are also permitted to use our software for internal purposes (i.e. a same day delivery startup).
 
-
 ### How does the API/SDK Integration Work?
 A Route4Me customer, integrator, or partner incorporates the Route4Me SDK or API into their code base.
 Route4Me permits any paying subscriber to interact with every part of its system using it’s API.
 The API is RESTful, which means that it’s web based and can be accessed by other programs and machines
 The API/SDK should be used to automate the route planning process, or to generate many routes with minimal manual intervention
-
 
 
 ### Do optimized routes automatically appear inside my Route4Me account?
@@ -52,7 +67,6 @@ Yes. The API can accept lat/lng and an unlimited amount of per-address metadata.
 ### Are all my optimized routes stored permanently stored in the Route4Me database?
 Yes. All routes are permanently stored in the database and are no longer accessible to you after your subscription is terminated.
 
-
 ### Can I incorporate your API into my mobile application?
 Route4Me’s route planning and optimization technology can only be added into applications that do not directly compete with Route4Me. 
 This means the application’s primary capabilities must be unrelated to route optimization, route planning, or navigation.
@@ -78,151 +92,11 @@ Since Route4Me works globally, this means that all of Route4Me’s capabilities 
 ### Will the Route4Me API/SDK work in my program on the Mac, PC, or Linux?
 Customers are encouraged to select their preferred operating system environment. The Route4Me API/SDK will function on any operating system that supports the preferred programming language of the customer. At this point in time, almost every supported SDK can run on any operating system.
 
-
 ### Does the Route4Me API/SDK require me to buy my own servers?
 Route4Me has its own computing infrastructure that you can access using the API and SDKs. Customers typically have to run the SDK code on their own computers and/or servers to access this infrastructure.
 
 ### Does Route4Me have an on-premise solution?
 Route4Me does not currently lease or sell servers, and does not have on-premise appliance solution. This would only be possible in exceptionally unique scenarios.
 
-
 ### Does the Route4Me API/SDK require me to have my own programmers?
 The time required to integrate the SDK can be as little as 1 hour or may take several weeks, depending on the number of features being incorporated into the customer’s application and how much integration testing will be done by the client. A programmer’s involvement is almost always required to use Route4Me’s technology when accessing it through the API.
-
-
-
-### Installation and Usage
-
-In your program import the package using
-
-```go
-import "github.com/route4me/route4me-go-sdk"
-```
-
-Then run `go run` to install.
-
-## Usage example
-
-### Single Driver route optimization
-
-```go
-package main
-
-import (
-        "fmt"
-        "github.com/route4me/route4me-go-sdk"
-        "encoding/json"
-        "io/ioutil"
-)
-
-func main() {
-        r4m := route4me.NewClient("11111111111111111111111111111111")
-
-        fileContents, err := ioutil.ReadFile("addresses.json")
-        if err != nil {
-                fmt.Print(err)
-                return
-        }
-
-        var addresses []route4me.Address
-        err = json.Unmarshal(fileContents, &addresses)
-        if err != nil {
-                fmt.Print(err)
-                return
-        }
-
-        request := route4me.NewOptimizationNewParams()
-        request.Parameters = &route4me.RouteParameters{
-                Algorithm_type: route4me.ALGORITHMTYPE_TSP,
-                Distance_unit: route4me.DISTANCEUNIT_MI,
-                Device_type: route4me.DEVICETYPE_WEB,
-                Optimize: route4me.OPTIMIZE_DISTANCE,
-                Route_max_duration: 86400,
-                Travel_mode: route4me.TRAVELMODE_DRIVING,
-                Vehicle_capacity: 1,
-                Vehicle_max_distance: 10000,
-                Rt: true,
-                Store_route: true,
-        }
-        request.Addresses = addresses
-
-        response, exception, err := r4m.NewOptimization(request)
-        if err != nil {
-                fmt.Print(err)
-                return
-        }
-        if exception != nil {
-                for _, error := range exception.Errors {
-                        fmt.Print(error)
-                }
-                return
-        }
-        fmt.Printf("%+v", response)
-}
-```
-
-### Multiple Depot Multiple Driver route optimization
-
-```go
-package main
-
-import (
-        "fmt"
-        "github.com/route4me/route4me-go-sdk"
-        "encoding/json"
-        "io/ioutil"
-)
-
-func main() {
-        r4m := route4me.NewClient("11111111111111111111111111111111")
-
-        fileContents, err := ioutil.ReadFile("addresses.json")
-        if err != nil {
-                fmt.Print(err)
-                return
-        }
-
-        var addresses []route4me.Address
-        err = json.Unmarshal(fileContents, &addresses)
-        if err != nil {
-                fmt.Print(err)
-                return
-        }
-
-
-        request := route4me.NewOptimizationNewParams()
-        request.Parameters = &route4me.RouteParameters{
-                Algorithm_type: route4me.ALGORITHMTYPE_CVRP_TW_SD,
-                Distance_unit: route4me.DISTANCEUNIT_MI,
-                Device_type: route4me.DEVICETYPE_WEB,
-                Optimize: route4me.OPTIMIZE_DISTANCE,
-                Metric: route4me.METRIC_GEODESIC,
-                Route_max_duration: 86400 * 2,
-                Travel_mode: route4me.TRAVELMODE_DRIVING,
-                Vehicle_capacity: 50,
-                Vehicle_max_distance: 10000,
-                Parts: 50,
-        }
-        request.Addresses = addresses
-
-        response, exception, err := r4m.NewOptimization(request)
-        if err != nil {
-                fmt.Print(err)
-                return
-        }
-        if exception != nil {
-                for _, error := range exception.Errors {
-                        fmt.Print(error)
-                }
-                return
-        }
-        fmt.Printf("%+v", response)
-}
-```
-
-
-## Tests
-
-```
-go test ./...
-```
