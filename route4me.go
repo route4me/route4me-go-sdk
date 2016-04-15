@@ -13,7 +13,7 @@ import (
 
 const (
 	defaultTimeout time.Duration = time.Minute * 30
-	baseURL                      = "https://www.route4me.com"
+	BaseURL                      = "https://www.route4me.com"
 )
 
 var InvalidStatusCode = errors.New("Invalid status code")
@@ -28,13 +28,13 @@ func NewClientWithOptions(APIKey string, timeout time.Duration, baseURL string) 
 	return &Client{
 		APIKey:  APIKey,
 		Client:  &http.Client{Timeout: timeout},
-		BaseURL: baseURL,
+		BaseURL: BaseURL,
 	}
 }
 
 // NewClient creates a route4me client
 func NewClient(APIKey string) *Client {
-	return NewClientWithOptions(APIKey, defaultTimeout, baseURL)
+	return NewClientWithOptions(APIKey, defaultTimeout, BaseURL)
 }
 
 func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([]byte, error) {
