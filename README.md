@@ -1,7 +1,7 @@
 Access Route4Me's logistics-as-a-service API using our Go SDK
 -------------------
 
-### Installation and Usage
+## Installation and Usage
 
 In your program import the package using
 
@@ -11,15 +11,17 @@ import "github.com/route4me/route4me-go-sdk"
 
 Then run `go get ./...` to download.
 
-## Usage example
+### Usage example
 
 Check [wiki](https://github.com/route4me/route4me-go-sdk/wiki)
 
-## Tests
+### Tests
 
 ```
 go test ./...
 ```
+
+## Frequently Asked Questions
 
 ### What does the Route4Me SDK permit me to do?
 This SDK makes it easier for you use the Route4Me API, which creates optimally sequenced driving routes for many drivers.
