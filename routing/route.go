@@ -32,8 +32,8 @@ type DataObject struct {
 	Parameters       RouteParameters   `json:"parameters,omitempty"`
 	Addresses        []Address         `json:"addresses,omitempty"`
 	Routes           []Route           `json:"routes,omitempty"`
-	Links            Links             `json:"links,omitempty"`
-	TrackingHistory  []TrackingHistory `json:"tracking_history,omitempty"`
+	//Links            Links             `json:"links,omitempty"`
+	//TrackingHistory  []TrackingHistory `json:"tracking_history,omitempty"`
 }
 
 type Route struct {
@@ -59,12 +59,20 @@ type Links struct {
 	OptimizationProblemID string `json:"optimization_problem_id,omitempty"`
 }
 
+type Optimize string
+
+const (
+	Distance        Optimize = "Distance"
+	Time            Optimize = "Time"
+	TimeWithTraffic Optimize = "TimeWithTraffic"
+)
+
 type TravelMode string
 
 const (
-	Distance        TravelMode = "Distance"
-	Time            TravelMode = "Time"
-	TimeWithTraffic TravelMode = "TimeWithTraffic"
+	Driving  TravelMode = "Driving"
+	Walking  TravelMode = "Walking"
+	Trucking TravelMode = "Trucking"
 )
 
 type PathOutput string

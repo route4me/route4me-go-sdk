@@ -5,6 +5,7 @@ import (
 	"reflect"
 	"strconv"
 	"testing"
+	"time"
 
 	"github.com/route4me/route4me-go-sdk"
 )
@@ -88,13 +89,9 @@ func TestIntegrationDeleteRoutes(t *testing.T) {
 	if len(routes) < 2 {
 		t.Skip("Not enough routes to test deleting.")
 	}
-	deleted, err := service.DeleteRoutes([]string{routes[0].ID, routes[1].ID})
+	_, err = service.DeleteRoutes([]string{routes[0].ID, routes[1].ID})
 	if err != nil {
 		t.Error(err)
-		return
-	}
-	if !reflect.DeepEqual(deleted[0].ID, routes[0].ID) || !reflect.DeepEqual(deleted[1].ID, routes[1].ID) {
-		t.Error("Deleting routes failed.")
 		return
 	}
 }
@@ -173,6 +170,156 @@ func TestIntegrationGetOptimization(t *testing.T) {
 		t.Skip("Not enough optimizations in the getOptimizations")
 	}
 	_, err = service.GetOptimization(&OptimizationParameters{ProblemID: optimizations[0].ProblemID})
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationRunOptimization(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	addresses := []*Address{
+		&Address{AddressString: "3634 W Market St, Fairlawn, OH 44333", //all possible originating locations are depots, should be marked as true
+			//stylistically we recommend all depots should be at the top of the destinations list
+			IsDepot:   true,
+			Latitude:  41.135762259364,
+			Longitude: -81.629313826561,
+
+			//the number of seconds at destination
+			Time: 300,
+
+			//together these two specify the time window of a destination
+			//seconds offset relative to the route start time for the open availability of a destination
+			TimeWindowStart: 28800,
+
+			//seconds offset relative to the route end time for the open availability of a destination
+			TimeWindowEnd: 29465},
+
+		&Address{AddressString: "1218 Ruth Ave, Cuyahoga Falls, OH 44221",
+			Latitude:        41.135762259364,
+			Longitude:       -81.629313826561,
+			Time:            300,
+			TimeWindowStart: 29465,
+			TimeWindowEnd:   30529},
+
+		&Address{AddressString: "512 Florida Pl, Barberton, OH 44203",
+			Latitude:        41.003671512008,
+			Longitude:       -81.598461046815,
+			Time:            300,
+			TimeWindowStart: 30529,
+			TimeWindowEnd:   33779},
+
+		&Address{AddressString: "512 Florida Pl, Barberton, OH 44203",
+			Latitude:        41.003671512008,
+			Longitude:       -81.598461046815,
+			Time:            100,
+			TimeWindowStart: 33779,
+			TimeWindowEnd:   33944},
+
+		&Address{AddressString: "3495 Purdue St, Cuyahoga Falls, OH 44221",
+			Latitude:        41.162971496582,
+			Longitude:       -81.479049682617,
+			Time:            300,
+			TimeWindowStart: 33944,
+			TimeWindowEnd:   34801},
+
+		&Address{AddressString: "1659 Hibbard Dr, Stow, OH 44224",
+			Latitude:        41.194505989552,
+			Longitude:       -81.443351581693,
+			Time:            300,
+			TimeWindowStart: 34801,
+			TimeWindowEnd:   36366},
+
+		&Address{AddressString: "2705 N River Rd, Stow, OH 44224",
+			Latitude:        41.145240783691,
+			Longitude:       -81.410247802734,
+			Time:            300,
+			TimeWindowStart: 36366,
+			TimeWindowEnd:   39173},
+
+		&Address{AddressString: "10159 Bissell Dr, Twinsburg, OH 44087",
+			Latitude:        41.340042114258,
+			Longitude:       -81.421226501465,
+			Time:            300,
+			TimeWindowStart: 39173,
+			TimeWindowEnd:   41617},
+
+		&Address{AddressString: "367 Cathy Dr, Munroe Falls, OH 44262",
+			Latitude:        41.148578643799,
+			Longitude:       -81.429229736328,
+			Time:            300,
+			TimeWindowStart: 41617,
+			TimeWindowEnd:   43660},
+
+		&Address{AddressString: "367 Cathy Dr, Munroe Falls, OH 44262",
+			Latitude:        41.148578643799,
+			Longitude:       -81.429229736328,
+			Time:            300,
+			TimeWindowStart: 43660,
+			TimeWindowEnd:   46392},
+
+		&Address{AddressString: "512 Florida Pl, Barberton, OH 44203",
+			Latitude:        41.003671512008,
+			Longitude:       -81.598461046815,
+			Time:            300,
+			TimeWindowStart: 46392,
+			TimeWindowEnd:   48389},
+
+		&Address{AddressString: "559 W Aurora Rd, Northfield, OH 44067",
+			Latitude:        41.315116882324,
+			Longitude:       -81.558746337891,
+			Time:            50,
+			TimeWindowStart: 48389,
+			TimeWindowEnd:   48449},
+
+		&Address{AddressString: "3933 Klein Ave, Stow, OH 44224",
+			Latitude:        41.169467926025,
+			Longitude:       -81.429420471191,
+			Time:            300,
+			TimeWindowStart: 48449,
+			TimeWindowEnd:   50152},
+
+		&Address{AddressString: "2148 8th St, Cuyahoga Falls, OH 44221",
+			Latitude:        41.136692047119,
+			Longitude:       -81.493492126465,
+			Time:            300,
+			TimeWindowStart: 50152,
+			TimeWindowEnd:   51982},
+
+		&Address{AddressString: "3731 Osage St, Stow, OH 44224",
+			Latitude:        41.161357879639,
+			Longitude:       -81.42293548584,
+			Time:            100,
+			TimeWindowStart: 51982,
+			TimeWindowEnd:   52180},
+
+		&Address{AddressString: "3731 Osage St, Stow, OH 44224",
+			Latitude:        41.161357879639,
+			Longitude:       -81.42293548584,
+			Time:            300,
+			TimeWindowStart: 52180,
+			TimeWindowEnd:   54379},
+	}
+	routeParams := &RouteParameters{
+		AlgorithmType:        CVRP_TW_MD,
+		Name:                 "Multiple Depot, Multiple Driver",
+		RouteDate:            time.Now().Unix(),
+		RouteTime:            60 * 60 * 7,
+		RouteMaxDuration:     86400,
+		VehicleCapacity:      1,
+		VehicleMaxDistanceMI: 1000,
+		Optimize:             Distance,
+		DistanceUnit:         Miles,
+		DeviceType:           Web,
+		TravelMode:           Driving,
+	}
+
+	optParams := &OptimizationParameters{
+		Addresses:  addresses,
+		Parameters: routeParams,
+	}
+	_, err := service.RunOptimization(optParams)
 	if err != nil {
 		t.Error(err)
 	}

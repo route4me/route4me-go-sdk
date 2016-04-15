@@ -83,24 +83,24 @@ type RouteParameters struct {
 
 	//the route start date in UTC, unix timestamp seconds.
 	//used to show users when the route will begin, also used for reporting and analytics
-	RouteDate uint64 `json:"route_date,omitempty"`
+	RouteDate int64 `json:"route_date,omitempty"`
 
 	//offset in seconds relative to the route start date (i.e. 9AM would be 60 * 60 * 9)
 	RouteTime int `json:"route_time,omitempty"`
 
-	Optimize string `json:"optimize,omitempty"`
+	Optimize Optimize `json:"optimize,omitempty"`
 
 	//when the tour type is not round trip (rt = false), enable lock last so that the final destination is fixed
 	//example: driver leaves a depot, but must always arrive at home ( or a specific gas station) at the end of the route
 	LockLast bool `json:"lock_last,omitempty"`
 
-	VehicleCapacity string `json:"vehicle_capacity,omitempty"`
+	VehicleCapacity float64 `json:"vehicle_capacity,omitempty"`
 
-	VehicleMaxDistanceMI string `json:"vehicle_max_distance_mi,omitempty"`
+	VehicleMaxDistanceMI float64 `json:"vehicle_max_distance_mi,omitempty"`
 
 	DistanceUnit DistanceUnit `json:"distance_unit,omitempty"`
 
-	TravelMode string `json:"travel_mode,omitempty"`
+	TravelMode TravelMode `json:"travel_mode,omitempty"`
 
 	Avoid string `json:"avoid,omitempty"`
 
@@ -115,7 +115,7 @@ type RouteParameters struct {
 	//when using a multiple driver algorithm, this is the maximum permissible duration of a generated route
 	//the optimization system will automatically create more routes when the route_max_duration is exceeded for a route
 	//however it will create an 'unrouted' list of addresses if the maximum number of drivers is exceeded
-	RouteMaxDuration uint64 `json:"route_max_duration,omitempty"`
+	RouteMaxDuration int64 `json:"route_max_duration,omitempty"`
 
 	//the email address to notify upon completion of an optimization request
 	RouteEmail string `json:"route_email,omitempty"`

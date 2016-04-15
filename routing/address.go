@@ -15,7 +15,7 @@ type Address struct {
 	AddressString         string      `json:"address"`
 	IsDepot               bool        `json:"is_depot,omitempty"`
 	Latitude              float64     `json:"lat"`
-	Longtitude            float64     `json:"lng"`
+	Longitude             float64     `json:"lng"`
 	RouteID               string      `json:"route_id,omitempty" http:"route_id"`
 	OriginalRouteID       string      `json:"original_route_id,omitempty"`
 	SequenceNo            int         `json:"sequence_no,omitempty"`
