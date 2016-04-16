@@ -28,7 +28,7 @@ func NewClientWithOptions(APIKey string, timeout time.Duration, baseURL string) 
 	return &Client{
 		APIKey:  APIKey,
 		Client:  &http.Client{Timeout: timeout},
-		BaseURL: BaseURL,
+		BaseURL: baseURL,
 	}
 }
 
