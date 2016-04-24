@@ -1,6 +1,7 @@
 package routing
 
 import (
+	"fmt"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -337,7 +338,6 @@ func TestIntegrationUpdateOptimization(t *testing.T) {
 	if len(optimizations) < 1 {
 		t.Skip("Not enough optimizations in the getOptimizations")
 	}
-
 	updated, err := service.UpdateOptimization(&OptimizationParameters{ProblemID: optimizations[0].ProblemID, Reoptimize: true})
 	if err != nil {
 		t.Error(err)
@@ -479,4 +479,62 @@ func TestIntegrationAddAddressNote(t *testing.T) {
 		t.Error(err)
 		return
 	}
+}
+
+func TestIntegrationAddRouteDestinations(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error("Error in external service (GetTeamRoutes): ", err)
+		return
+	}
+	if len(routes) != 1 {
+		t.Skip("Not enough routes to run UpdateAddress")
+	}
+	route := routes[0]
+	addresses := []Address{
+		//address to be added
+		Address{
+			AddressString: "717 5th Ave New York, NY 10021",
+			Alias:         "Giorgio Armani",
+			Latitude:      40.7669692,
+			Longitude:     -73.9693864,
+			Time:          0,
+		},
+	}
+	_, err = service.AddRouteDestinations(route.ID, addresses)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestIntegrationRemoveRouteDestination(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error("Error in external service (GetTeamRoutes): ", err)
+		return
+	}
+	if len(routes) != 1 {
+		t.Skip("Not enough routes to run RemoveRouteDestination")
+	}
+	get, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(get.Addresses) < 1 {
+		t.Skip("Not enough addresses to run RemoveRouteDestination")
+	}
+	boolean, err := service.RemoveRouteDestination(get.ID, get.Addresses[0].RouteDestinationID.String())
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fmt.Println(boolean)
 }

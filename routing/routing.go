@@ -182,4 +182,34 @@ func (s *Service) AddAddressNote(query *NoteQuery, noteContents string) (*Note, 
 	return response.Note, nil
 }
 
-//TODO: Removing/Moving destinations
+type addRouteDestinationsRequest struct {
+	RouteID   string    `http:"route_id"`
+	Addresses []Address `json:"addresses"`
+}
+
+func (s *Service) AddRouteDestinations(routeID string, addresses []Address) (*DataObject, error) {
+	request := &addRouteDestinationsRequest{
+		RouteID:   routeID,
+		Addresses: addresses,
+	}
+	resp := &DataObject{}
+	return resp, s.Client.Do(http.MethodPut, routeEndpoint, request, resp)
+}
+
+type removeRouteDestinationRequest struct {
+	RouteID            string `http:"route_id"`
+	RouteDestinationID string `http:"route_destination_id"`
+}
+
+type removeRouteDestinationResposne struct {
+	Deleted bool `json:"deleted"`
+}
+
+func (s *Service) RemoveRouteDestination(routeID string, destinationID string) (bool, error) {
+	request := &removeRouteDestinationRequest{
+		RouteID:            routeID,
+		RouteDestinationID: destinationID,
+	}
+	resp := &removeRouteDestinationResposne{}
+	return resp.Deleted, s.Client.Do(http.MethodDelete, routeEndpoint, request, resp)
+}
