@@ -13,11 +13,12 @@ import (
 )
 
 const (
-	addressEndpoint        = "/api.v4/address.php"
-	routeEndpoint          = "/api.v4/route.php"
-	optimizationEndpoint   = "/api.v4/optimization_problem.php"
-	duplicateRouteEndpoint = "/actions/duplicate_route.php"
-	notesEndpoint          = "/actions/addRouteNotes.php"
+	addressEndpoint              = "/api.v4/address.php"
+	routeEndpoint                = "/api.v4/route.php"
+	optimizationEndpoint         = "/api.v4/optimization_problem.php"
+	duplicateRouteEndpoint       = "/actions/duplicate_route.php"
+	notesEndpoint                = "/actions/addRouteNotes.php"
+	moveRouteDestinationEndpoint = "/actions/route/move_route_destination.php"
 )
 
 type Service struct {
@@ -157,7 +158,7 @@ func (s *Service) AddAddressNote(query *NoteQuery, noteContents string) (*Note, 
 	bodyValues.Add("strNoteContents", noteContents)
 	response := &addAddressNoteResponse{}
 
-	request, err := http.NewRequest("POST", s.Client.BaseURL+notesEndpoint, strings.NewReader(getValues.Encode()))
+	request, err := http.NewRequest("POST", s.Client.BaseURL+notesEndpoint, strings.NewReader(bodyValues.Encode()))
 	if err != nil {
 		return nil, err
 	}
@@ -212,4 +213,47 @@ func (s *Service) RemoveRouteDestination(routeID string, destinationID string) (
 	}
 	resp := &removeRouteDestinationResposne{}
 	return resp.Deleted, s.Client.Do(http.MethodDelete, routeEndpoint, request, resp)
+}
+
+type DestinationMoveRequest struct {
+	ToRouteID          string `http:"to_route_id"`
+	RouteDestinationID string `http:"route_destination_id"`
+	AfterDestinationID string `http:"after_destination_id"`
+}
+
+type moveDestinationToRouteResponse struct {
+	Success bool   `json:"success"`
+	Error   string `json:"error,omitempty"`
+}
+
+func (s *Service) MoveDestinationToRoute(query *DestinationMoveRequest) (bool, error) {
+	getValues := &url.Values{}
+	getValues.Add("api_key", s.Client.APIKey)
+
+	bodyValues := utils.StructToURLValues(query)
+	response := &moveDestinationToRouteResponse{}
+
+	request, err := http.NewRequest("POST", s.Client.BaseURL+moveRouteDestinationEndpoint, strings.NewReader(bodyValues.Encode()))
+	if err != nil {
+		return false, err
+	}
+	request.URL.RawQuery = getValues.Encode()
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return false, err
+	}
+	defer resp.Body.Close()
+
+	read, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return false, err
+	}
+	err = json.Unmarshal(read, response)
+	if err != nil {
+		return false, err
+	}
+	if response.Error != "" {
+		return response.Success, errors.New(response.Error)
+	}
+	return response.Success, nil
 }

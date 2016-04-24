@@ -1,7 +1,6 @@
 package routing
 
 import (
-	"fmt"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -531,10 +530,9 @@ func TestIntegrationRemoveRouteDestination(t *testing.T) {
 	if len(get.Addresses) < 1 {
 		t.Skip("Not enough addresses to run RemoveRouteDestination")
 	}
-	boolean, err := service.RemoveRouteDestination(get.ID, get.Addresses[0].RouteDestinationID.String())
+	_, err = service.RemoveRouteDestination(get.ID, get.Addresses[0].RouteDestinationID.String())
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	fmt.Println(boolean)
 }
