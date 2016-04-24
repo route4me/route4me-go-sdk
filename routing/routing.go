@@ -1,11 +1,15 @@
 package routing
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/route4me/route4me-go-sdk"
+	"github.com/route4me/route4me-go-sdk/utils"
 )
 
 const (
@@ -13,6 +17,7 @@ const (
 	routeEndpoint          = "/api.v4/route.php"
 	optimizationEndpoint   = "/api.v4/optimization_problem.php"
 	duplicateRouteEndpoint = "/actions/duplicate_route.php"
+	notesEndpoint          = "/actions/addRouteNotes.php"
 )
 
 type Service struct {
@@ -124,4 +129,57 @@ func (s *Service) DeleteRoutes(routeIDs []string) ([]Route, error) {
 	return resp, s.Client.Do(http.MethodGet, routeEndpoint, request, &resp)
 }
 
-//TODO: Add Notes and Removing/Moving destinations
+func (s *Service) GetAddressNotes(query *NoteQuery) ([]Note, error) {
+	addressQuery := &AddressQuery{
+		RouteID:            query.RouteID,
+		RouteDestinationID: query.AddressID,
+		Notes:              true,
+	}
+	addr, err := s.GetAddress(addressQuery)
+	return addr.Notes, err
+}
+
+type addAddressNoteResponse struct {
+	Status bool  `json:"status"`
+	Note   *Note `json:"note,omitempty"`
+}
+
+func (s *Service) AddAddressNote(query *NoteQuery, noteContents string) (*Note, error) {
+	strUpdateType := "unclassified"
+	if query.ActivityType != "" {
+		strUpdateType = string(query.ActivityType)
+	}
+	getValues := utils.StructToURLValues(query)
+	getValues.Add("api_key", s.Client.APIKey)
+
+	bodyValues := &url.Values{}
+	bodyValues.Add("strUpdateType", strUpdateType)
+	bodyValues.Add("strNoteContents", noteContents)
+	response := &addAddressNoteResponse{}
+
+	request, err := http.NewRequest("POST", s.Client.BaseURL+notesEndpoint, strings.NewReader(getValues.Encode()))
+	if err != nil {
+		return nil, err
+	}
+	request.URL.RawQuery = getValues.Encode()
+	resp, err := http.DefaultClient.Do(request)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	read, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+	err = json.Unmarshal(read, response)
+	if err != nil {
+		return nil, err
+	}
+	if !response.Status {
+		return nil, errors.New("Note not added.")
+	}
+	return response.Note, nil
+}
+
+//TODO: Removing/Moving destinations

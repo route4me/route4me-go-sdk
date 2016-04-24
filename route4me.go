@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/route4me/route4me-go-sdk/utils"
 )
 
 const (
@@ -54,8 +56,7 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 		return byt, err
 	}
 	//Prepare query string
-
-	params := structToURLValues(data)
+	params := utils.StructToURLValues(data)
 	params.Add("api_key", c.APIKey)
 	request.URL.RawQuery = params.Encode()
 	resp, err := c.Client.Do(request)

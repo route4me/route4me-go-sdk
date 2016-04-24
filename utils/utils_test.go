@@ -1,4 +1,4 @@
-package route4me
+package utils
 
 import (
 	"reflect"
@@ -36,7 +36,7 @@ func TestStructToURLValues(t *testing.T) {
 		Float32:   15,
 		NoConvert: "hey",
 	}
-	urlValues := structToURLValues(test)
+	urlValues := StructToURLValues(test)
 	if urlValues.Get("NoConvert") != "" {
 		t.Error("Value that should not be converted somehow ended up being.")
 	}

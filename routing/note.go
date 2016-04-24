@@ -18,10 +18,36 @@ type Note struct {
 }
 
 type NoteQuery struct {
-	RouteID      string  `json:"route_id,omitempty"`
-	AddressID    int     `json:"address_id,omitempty"`
-	Latitude     float64 `json:"dev_lat"`
-	Longitude    float64 `json:"dev_lng"`
-	DeviceType   string  `json:"device_type"`
-	ActivityType string  `json:"strUpdateType"`
+	RouteID      string           `http:"route_id"`
+	AddressID    string           `http:"address_id"`
+	Latitude     float64          `http:"dev_lat"`
+	Longitude    float64          `http:"dev_lng"`
+	DeviceType   string           `http:"device_type"`
+	ActivityType StatusUpdateType `http:"strUpdateType"`
 }
+
+type StatusUpdateType string
+
+const (
+	Pickup                      StatusUpdateType = "pickup"
+	DropOff                     StatusUpdateType = "dropoff"
+	NoAnswer                    StatusUpdateType = "noanswer"
+	NotFound                    StatusUpdateType = "notfound"
+	NotPaid                     StatusUpdateType = "notpaid"
+	Paid                        StatusUpdateType = "paid"
+	WrongDelivery               StatusUpdateType = "wrongdelivery"
+	WrongAddressRecipient       StatusUpdateType = "wrongaddressrecipient"
+	NotPresent                  StatusUpdateType = "notpresent"
+	PartsMissing                StatusUpdateType = "parts_missing"
+	ServiceRendered             StatusUpdateType = "service_rendered"
+	FollowUp                    StatusUpdateType = "follow_up"
+	LeftInformation             StatusUpdateType = "left_information"
+	SpokeWithDecisionMaker      StatusUpdateType = "spoke_with_decision_maker"
+	SpokeWithDecisionInfluencer StatusUpdateType = "spoke_with_decision_influencer"
+	CompetitiveAccount          StatusUpdateType = "competitive_account"
+	ScheduledFollowUpMeeting    StatusUpdateType = "scheduled_follow_up_meeting"
+	ScheduledLunch              StatusUpdateType = "scheduled_lunch"
+	ScheduledProductDemo        StatusUpdateType = "scheduled_product_demo"
+	ScheduledClinicalDemo       StatusUpdateType = "scheduled_clinical_demo"
+	NoOpportunity               StatusUpdateType = "no_opportunity"
+)

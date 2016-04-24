@@ -414,3 +414,69 @@ func TestIntegrationUpdateAddress(t *testing.T) {
 		t.Error("Updated addresses do not equal")
 	}
 }
+
+func TestIntegrationGetAddressNotes(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error("Error in external service (GetTeamRoutes): ", err)
+		return
+	}
+	if len(routes) != 1 {
+		t.Skip("Not enough routes to run UpdateAddress")
+	}
+	get, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(get.Addresses) < 1 {
+		t.Skip("Not enough addresses to run UpdateAddress")
+	}
+	query := &NoteQuery{
+		RouteID:   get.ID,
+		AddressID: get.Addresses[0].RouteDestinationID.String(),
+	}
+	_, err = service.GetAddressNotes(query)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestIntegrationAddAddressNote(t *testing.T) {
+	t.Skip()
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error("Error in external service (GetTeamRoutes): ", err)
+		return
+	}
+	if len(routes) != 1 {
+		t.Skip("Not enough routes to run UpdateAddress")
+	}
+	get, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(get.Addresses) < 1 {
+		t.Skip("Not enough addresses to run UpdateAddress")
+	}
+	query := &NoteQuery{
+		RouteID:      get.ID,
+		AddressID:    get.Addresses[0].RouteDestinationID.String(),
+		Latitude:     33.132675170898,
+		Longitude:    -83.244743347168,
+		ActivityType: DropOff,
+	}
+	_, err = service.AddAddressNote(query, "TestNoteContents")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}

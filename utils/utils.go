@@ -1,4 +1,4 @@
-package route4me
+package utils
 
 import (
 	"net/url"
@@ -7,7 +7,7 @@ import (
 )
 
 //https://gist.github.com/tonyhb/5819315#file-main-go-L32
-func structToURLValues(i interface{}) url.Values {
+func StructToURLValues(i interface{}) url.Values {
 	values := url.Values{}
 	iVal := reflect.ValueOf(i).Elem()
 	typ := iVal.Type()
