@@ -62,4 +62,6 @@ type Address struct {
 	TimeWindowEnd2   int `json:"time_window_end_2,omitempty"`
 
 	CustomFields map[string]string `json:"custom_fields,omitempty"`
+
+	OrderID uint64 `json:"order_id,omitempty"`
 }
