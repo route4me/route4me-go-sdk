@@ -175,6 +175,25 @@ func TestIntegrationGetOptimization(t *testing.T) {
 	}
 }
 
+func TestIntegrationDeleteOptimization(t *testing.T) {
+	t.Skip("Currently doesn't work")
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	optimizations, err := service.GetOptimizations(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error("Error in external function (getOptimizations): ", err)
+		return
+	}
+	if len(optimizations) < 1 {
+		t.Skip("Not enough optimizations in the getOptimizations")
+	}
+	err = service.DeleteOptimization(optimizations[0].ProblemID)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestIntegrationRunOptimization(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")

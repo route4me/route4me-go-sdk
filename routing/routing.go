@@ -50,6 +50,14 @@ func (s *Service) UpdateOptimization(parameters *OptimizationParameters) (*DataO
 	return resp, s.Client.Do(http.MethodPut, optimizationEndpoint, parameters, resp)
 }
 
+type deleteOptimizationRequest struct {
+	OptimizationProblemID string `http:"optimization_problem_id"`
+}
+
+func (s *Service) DeleteOptimization(optimizationProblemID string) error {
+	return s.Client.Do(http.MethodDelete, optimizationEndpoint, &deleteOptimizationRequest{OptimizationProblemID: optimizationProblemID}, nil)
+}
+
 //Addresses
 func (s *Service) GetAddress(query *AddressQuery) (*Address, error) {
 	resp := &Address{}

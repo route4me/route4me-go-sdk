@@ -22,6 +22,7 @@ func TestIntegrationAdd(t *testing.T) {
 		t.Error(err)
 		return
 	}
+	order.Created = newOrder.Created
 	order.ID = newOrder.ID
 	order.DateAdded = newOrder.DateAdded
 	order.CustomData = newOrder.CustomData
@@ -58,7 +59,7 @@ func TestIntegrationGet(t *testing.T) {
 }
 
 func TestIntegrationRemove(t *testing.T) {
-	t.Skip("Skipping Removal integration test. Looks like the endpoint is broken.")
+	//t.Skip("Skipping Removal integration test. Looks like the endpoint is broken.")
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}

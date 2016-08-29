@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/route4me/route4me-go-sdk"
+	"github.com/route4me/route4me-go-sdk/utils"
 )
 
 const endpoint = "/api.v4/order.php"
@@ -45,11 +46,7 @@ type deleteRequest struct {
 	IDs []uint64 `json:"order_ids"`
 }
 
-type deleteResponse struct {
-	Status bool `json:"status"`
-}
-
 func (s *Service) Delete(IDs []uint64) (bool, error) {
-	status := &deleteResponse{}
+	status := &utils.StatusResponse{}
 	return status.Status, s.Client.Do(http.MethodDelete, endpoint, &deleteRequest{IDs: IDs}, status)
 }

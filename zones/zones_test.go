@@ -71,13 +71,9 @@ func TestIntegrationRemove(t *testing.T) {
 	if len(zones) < 1 {
 		t.Skip("Not enough avoidance zones to test remove.")
 	}
-	success, err := service.Delete(&Query{ID: zones[0].ID})
+	err = service.Delete(&Query{ID: zones[0].ID})
 	if err != nil {
 		t.Error(err)
-		return
-	}
-	if !success {
-		t.Error("Deleting zone failed")
 		return
 	}
 }

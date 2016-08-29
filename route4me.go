@@ -89,6 +89,9 @@ func (c *Client) Do(method string, endpoint string, data interface{}, out interf
 		}
 		return err
 	}
+	if out == nil {
+		return err
+	}
 	err = json.Unmarshal(read, out)
 	return err
 }

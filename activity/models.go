@@ -1,11 +1,21 @@
 package activity
 
+import "github.com/route4me/route4me-go-sdk/users"
+
 type Activity struct {
-	ID        string `json:"activity_id"`
-	Type      string `json:"activity_type"`
-	Timestamp uint64 `json:"activity_timestamp,string,omitempty"`
-	Message   string `json:"activity_message,omitempty"`
-	RouteID   string `json:"route_destination_id,omitempty"`
+	ID        string       `json:"activity_id,omitempty"`
+	Type      ActivityType `json:"activity_type"`
+	Timestamp uint64       `json:"activity_timestamp,string,omitempty"`
+	Message   string       `json:"activity_message,omitempty"`
+	RouteID   string       `json:"route_destination_id,omitempty"`
+	RouteName string       `json:"route_name,omitempty"`
+
+	NoteID       *string `json:"note_id,omitempty"`
+	NoteType     *string `json:"note_type,omitempty"`
+	NoteContents *string `json:"note_contents,omitempty"`
+	NoteFile     *string `json:"note_file,omitempty"`
+
+	Member *users.User `json:"member,omitempty"`
 }
 
 type ActivityType string
@@ -33,6 +43,7 @@ const (
 	DriverArrivedLate       ActivityType = "driver-arrived-late"
 	GeofenceEntered         ActivityType = "geofence-entered"
 	GeofenceLeft            ActivityType = "geofence-left"
+	UserMessage             ActivityType = "user_message"
 )
 
 type Query struct {

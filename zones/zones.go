@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/route4me/route4me-go-sdk"
+	"github.com/route4me/route4me-go-sdk/utils"
 )
 
 const endpoint = "/api.v4/avoidance.php"
@@ -32,11 +33,11 @@ func (s *Service) Update(data *AvoidanceZone) (*AvoidanceZone, error) {
 	return resp, s.Client.Do(http.MethodPut, endpoint, data, resp)
 }
 
-type deleteResponse struct {
-	Status bool `json:"status"`
-}
-
-func (s *Service) Delete(data *Query) (bool, error) {
-	resp := &deleteResponse{}
-	return resp.Status, s.Client.Do(http.MethodDelete, endpoint, data, resp)
+func (s *Service) Delete(data *Query) error {
+	resp := &utils.StatusResponse{}
+	err := s.Client.Do(http.MethodDelete, endpoint, data, resp)
+	if err == nil && !resp.Status {
+		return utils.ErrOperationFailed
+	}
+	return err
 }
