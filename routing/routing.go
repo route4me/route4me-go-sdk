@@ -69,6 +69,30 @@ func (s *Service) UpdateAddress(data *Address) (*Address, error) {
 	return resp, s.Client.Do(http.MethodPut, addressEndpoint, data, resp)
 }
 
+type deleteAddressRequest struct {
+	OptimizationProblemID string      `http:"optimization_problem_id"`
+	RouteDestinationID    json.Number `http:"route_destination_id"`
+}
+
+type deleteAddressResponse struct {
+	Deleted            bool         `json:"deleted"`
+	RouteDestinationID *json.Number `json:"route_destination_id,omitempty"`
+}
+
+// DeleteAddress removes a destination (an address) with specified route_destination_id from an optimization problem with specified optimization_problem_id.
+func (s *Service) DeleteAddress(optimizationID string, routeDestinationID string) (*json.Number, error) {
+	req := &deleteAddressRequest{
+		OptimizationProblemID: optimizationID,
+		RouteDestinationID:    json.Number(routeDestinationID),
+	}
+	resp := &deleteAddressResponse{}
+	err := s.Client.Do(http.MethodDelete, addressEndpoint, req, resp)
+	if err == nil && !resp.Deleted {
+		return nil, utils.ErrOperationFailed
+	}
+	return resp.RouteDestinationID, err
+}
+
 //Routes
 func (s *Service) GetRoute(query *RouteQuery) (*Route, error) {
 	resp := &Route{}

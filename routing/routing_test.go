@@ -433,6 +433,45 @@ func TestIntegrationUpdateAddress(t *testing.T) {
 	}
 }
 
+func TestIntegrationDeleteAddress(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 64})
+	if err != nil {
+		t.Error("Error in external service (GetTeamRoutes): ", err)
+		return
+	}
+	if len(routes) == 0 {
+		t.Skip("Not enough routes to run DeleteAddress")
+	}
+	var addr Address
+	for i := 0; i < len(routes) && !addr.IsDepot; i++ {
+		get, err := service.GetRoute(&RouteQuery{ID: routes[i].ID})
+		if err != nil {
+			t.Error(err)
+			return
+		}
+		if len(get.Addresses) < 1 {
+			continue
+		}
+		for j := 0; j < len(get.Addresses) && !addr.IsDepot; j++ {
+			addr = get.Addresses[j]
+		}
+	}
+	if addr.IsDepot {
+		t.Skip("No non-depot addresses to run DeleteAddress test against")
+	}
+	routeID, err := service.DeleteAddress(addr.OptimizationProblemID, addr.RouteDestinationID.String())
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if routeID.String() != addr.RouteDestinationID.String() {
+		t.Error("Delete response returned different route destination id: " + routeID.String())
+	}
+}
+
 func TestIntegrationGetAddressNotes(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
