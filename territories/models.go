@@ -1,6 +1,10 @@
 package territories
 
-import "encoding/json"
+import (
+	"encoding/json"
+
+	"github.com/route4me/route4me-go-sdk/routing"
+)
 
 type AvoidanceZone struct {
 	//AvoidanceZone ID
@@ -9,7 +13,18 @@ type AvoidanceZone struct {
 	Color    string      `json:"territory_color"`
 	MemberID json.Number `json:"member_id"`
 	//Territory parameters
-	Territory Territory `json:"territory"`
+	Territory TerritoryShape `json:"territory"`
+}
+
+type Territory struct {
+	//Territory ID
+	ID       string      `json:"territory_id"`
+	Name     string      `json:"territory_name"`
+	Color    string      `json:"territory_color"`
+	MemberID json.Number `json:"member_id"`
+	//Territory parameters
+	Territory TerritoryShape    `json:"territory"`
+	Addresses []routing.Address `json:"addresses"`
 }
 
 type Query struct {
@@ -25,7 +40,7 @@ const (
 	Rectangle Type = "rect"
 )
 
-type Territory struct {
+type TerritoryShape struct {
 	Type Type     `json:"type"`
 	Data []string `json:"data"`
 }
