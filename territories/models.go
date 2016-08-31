@@ -1,4 +1,4 @@
-package zones
+package territories
 
 import "encoding/json"
 
