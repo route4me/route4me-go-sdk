@@ -147,6 +147,26 @@ func TestIntegrationDuplicateRoute(t *testing.T) {
 	}
 }
 
+func TestIntegrationMergeRoutes(t *testing.T) {
+	t.Skip("Currently returns weird errors")
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 2})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(routes) < 2 {
+		t.Skip("Not enough routes to test merging.")
+	}
+	err = service.MergeRoutes(routes[0].ID, routes[1].ID)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
 func TestIntegrationGetOptimizations(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")

@@ -19,6 +19,7 @@ type Contact struct {
 }
 
 type Query struct {
+	//Comma separated list of ids
 	AddressID string `http:"address_id"`
 	Limit     uint   `http:"limit"`
 	Offset    uint   `http:"offset"`

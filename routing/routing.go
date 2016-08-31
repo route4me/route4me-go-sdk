@@ -19,6 +19,7 @@ const (
 	duplicateRouteEndpoint       = "/actions/duplicate_route.php"
 	notesEndpoint                = "/actions/addRouteNotes.php"
 	moveRouteDestinationEndpoint = "/actions/route/move_route_destination.php"
+	mergeRoutesEndpoint          = "/actions/merge_routes.php"
 )
 
 type Service struct {
@@ -154,12 +155,28 @@ type deleteRequest struct {
 	RouteID string `json:"route_id"`
 }
 
-func (s *Service) DeleteRoutes(routeIDs []string) ([]Route, error) {
+func (s *Service) DeleteRoutes(routeIDs ...string) ([]Route, error) {
 	request := &deleteRequest{
 		RouteID: strings.Join(routeIDs, ","),
 	}
 	resp := []Route{}
-	return resp, s.Client.Do(http.MethodGet, routeEndpoint, request, &resp)
+	return resp, s.Client.Do(http.MethodDelete, routeEndpoint, request, &resp)
+}
+
+type mergeRequest struct {
+	RouteIDs []string `json:"route_ids"`
+}
+
+func (s *Service) MergeRoutes(routeIDs ...string) error {
+	request := &mergeRequest{
+		RouteIDs: routeIDs,
+	}
+	resp := &utils.StatusResponse{}
+	err := s.Client.Do(http.MethodPost, mergeRoutesEndpoint, request, resp)
+	if err == nil && !resp.Status {
+		return utils.ErrOperationFailed
+	}
+	return err
 }
 
 func (s *Service) GetAddressNotes(query *NoteQuery) ([]Note, error) {
