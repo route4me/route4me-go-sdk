@@ -36,7 +36,7 @@ func TestStructToURLValues(t *testing.T) {
 		Float32:   15,
 		NoConvert: "hey",
 	}
-	urlValues := StructToURLValues(test)
+	urlValues := StructToURLValues("http", test)
 	if urlValues.Get("NoConvert") != "" {
 		t.Error("Value that should not be converted somehow ended up being.")
 	}

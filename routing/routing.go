@@ -3,9 +3,7 @@ package routing
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
 	"net/http"
-	"net/url"
 	"strings"
 
 	"github.com/route4me/route4me-go-sdk"
@@ -189,6 +187,11 @@ func (s *Service) GetAddressNotes(query *NoteQuery) ([]Note, error) {
 	return addr.Notes, err
 }
 
+type addAddressNoteRequest struct {
+	NoteContents string `form:"strNoteContents"`
+	UpdateType   string `form:"strUpdateType"`
+}
+
 type addAddressNoteResponse struct {
 	Status bool  `json:"status"`
 	Note   *Note `json:"note,omitempty"`
@@ -199,37 +202,17 @@ func (s *Service) AddAddressNote(query *NoteQuery, noteContents string) (*Note, 
 	if query.ActivityType != "" {
 		strUpdateType = string(query.ActivityType)
 	}
-	getValues := utils.StructToURLValues(query)
-	getValues.Add("api_key", s.Client.APIKey)
 
-	bodyValues := &url.Values{}
-	bodyValues.Add("strUpdateType", strUpdateType)
-	bodyValues.Add("strNoteContents", noteContents)
-	response := &addAddressNoteResponse{}
-
-	request, err := http.NewRequest("POST", s.Client.BaseURL+notesEndpoint, strings.NewReader(bodyValues.Encode()))
-	if err != nil {
-		return nil, err
+	request := &addAddressNoteRequest{
+		UpdateType:   strUpdateType,
+		NoteContents: noteContents,
 	}
-	request.URL.RawQuery = getValues.Encode()
-	resp, err := http.DefaultClient.Do(request)
-	if err != nil {
-		return nil, err
+	resp := &addAddressNoteResponse{}
+	err := s.Client.Do(http.MethodPost, notesEndpoint, request, resp)
+	if err == nil && !resp.Status {
+		return nil, utils.ErrOperationFailed
 	}
-	defer resp.Body.Close()
-
-	read, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-	err = json.Unmarshal(read, response)
-	if err != nil {
-		return nil, err
-	}
-	if !response.Status {
-		return nil, errors.New("Note not added.")
-	}
-	return response.Note, nil
+	return resp.Note, err
 }
 
 type addRouteDestinationsRequest struct {
@@ -265,9 +248,9 @@ func (s *Service) RemoveRouteDestination(routeID string, destinationID string) (
 }
 
 type DestinationMoveRequest struct {
-	ToRouteID          string `http:"to_route_id"`
-	RouteDestinationID string `http:"route_destination_id"`
-	AfterDestinationID string `http:"after_destination_id"`
+	ToRouteID          string `form:"to_route_id"`
+	RouteDestinationID string `form:"route_destination_id"`
+	AfterDestinationID string `form:"after_destination_id"`
 }
 
 type moveDestinationToRouteResponse struct {
@@ -275,34 +258,11 @@ type moveDestinationToRouteResponse struct {
 	Error   string `json:"error,omitempty"`
 }
 
-func (s *Service) MoveDestinationToRoute(query *DestinationMoveRequest) (bool, error) {
-	getValues := &url.Values{}
-	getValues.Add("api_key", s.Client.APIKey)
-
-	bodyValues := utils.StructToURLValues(query)
-	response := &moveDestinationToRouteResponse{}
-
-	request, err := http.NewRequest("POST", s.Client.BaseURL+moveRouteDestinationEndpoint, strings.NewReader(bodyValues.Encode()))
-	if err != nil {
-		return false, err
+func (s *Service) MoveDestinationToRoute(query *DestinationMoveRequest) error {
+	resp := &moveDestinationToRouteResponse{}
+	err := s.Client.Do(http.MethodPost, moveRouteDestinationEndpoint, query, resp)
+	if err == nil && !resp.Success {
+		return utils.ErrOperationFailed
 	}
-	request.URL.RawQuery = getValues.Encode()
-	resp, err := http.DefaultClient.Do(request)
-	if err != nil {
-		return false, err
-	}
-	defer resp.Body.Close()
-
-	read, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return false, err
-	}
-	err = json.Unmarshal(read, response)
-	if err != nil {
-		return false, err
-	}
-	if response.Error != "" {
-		return response.Success, errors.New(response.Error)
-	}
-	return response.Success, nil
+	return err
 }

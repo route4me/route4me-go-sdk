@@ -44,19 +44,27 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 	var byt []byte
 	//We might change this to == for better accuracy
 	if method != http.MethodGet && method != http.MethodOptions {
-		serialized, err := json.Marshal(data)
-		if err != nil {
-			return byt, err
+		//Check if the data struct has any postform data to pass to the body
+		params := utils.StructToURLValues("form", data)
+		if len(params) > 0 {
+			reader = strings.NewReader(params.Encode())
+			// if no, marshall it with json
+		} else {
+			serialized, err := json.Marshal(data)
+			if err != nil {
+				return byt, err
+			}
+			reader = bytes.NewReader(serialized)
 		}
-		reader = bytes.NewReader(serialized)
 	}
 
 	request, err := http.NewRequest(method, c.BaseURL+endpoint, reader)
 	if err != nil {
 		return byt, err
 	}
+
 	//Prepare query string
-	params := utils.StructToURLValues(data)
+	params := utils.StructToURLValues("http", data)
 	params.Add("api_key", c.APIKey)
 	request.URL.RawQuery = params.Encode()
 	resp, err := c.Client.Do(request)

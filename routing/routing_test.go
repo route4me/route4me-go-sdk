@@ -89,7 +89,7 @@ func TestIntegrationDeleteRoutes(t *testing.T) {
 	if len(routes) < 2 {
 		t.Skip("Not enough routes to test deleting.")
 	}
-	_, err = service.DeleteRoutes([]string{routes[0].ID, routes[1].ID})
+	_, err = service.DeleteRoutes(routes[0].ID, routes[1].ID)
 	if err != nil {
 		t.Error(err)
 		return

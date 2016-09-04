@@ -7,7 +7,7 @@ import (
 )
 
 //https://gist.github.com/tonyhb/5819315#file-main-go-L32
-func StructToURLValues(i interface{}) url.Values {
+func StructToURLValues(tag string, i interface{}) url.Values {
 	values := url.Values{}
 	iVal := reflect.ValueOf(i).Elem()
 	typ := iVal.Type()
@@ -16,7 +16,7 @@ func StructToURLValues(i interface{}) url.Values {
 		if isEmptyValue(f) {
 			continue
 		}
-		tag := typ.Field(i).Tag.Get("http")
+		tag := typ.Field(i).Tag.Get(tag)
 		if tag == "" {
 			continue
 		}

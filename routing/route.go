@@ -47,7 +47,7 @@ type Route struct {
 	RouteRevenue              float64 `json:"route_revenue,omitempty"`
 	NetRevenuePerDistanceUnit float64 `json:"net_revenue_per_distance_unit,omitempty"`
 	CreatedTimestamp          uint64  `json:"created_timestamp,omitempty"`
-	Mpg                       int64   `json:"mpg,omitempty"`
+	Mpg                       float64 `json:"mpg,omitempty"`
 	TripDistance              float64 `json:"trip_distance,omitempty"`
 	GasPrice                  float64 `json:"gas_price,omitempty"`
 	RouteDurationSec          int     `json:"route_distance_sec,omitempty"`
