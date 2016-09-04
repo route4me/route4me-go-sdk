@@ -3,7 +3,7 @@ package users
 import "github.com/route4me/route4me-go-sdk"
 
 type User struct {
-	MemberID               int           `json:"member_id,string,omitempty"`
+	MemberID               int64         `json:"member_id,string,omitempty"`
 	AccountTypeID          int           `json:"account_type_id,string,omitempty"`
 	MemberType             string        `json:"member_type,omitempty"`
 	MemberFirstName        string        `json:"member_first_name,omitempty"`

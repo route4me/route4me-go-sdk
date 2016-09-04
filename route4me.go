@@ -7,6 +7,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"strings"
 	"time"
 
@@ -63,8 +64,12 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 		return byt, err
 	}
 
-	//Prepare query string
-	params := utils.StructToURLValues("http", data)
+	params := url.Values{}
+
+	if data != nil {
+		//Prepare query string
+		params = utils.StructToURLValues("http", data)
+	}
 	params.Add("api_key", c.APIKey)
 	request.URL.RawQuery = params.Encode()
 	resp, err := c.Client.Do(request)
