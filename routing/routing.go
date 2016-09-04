@@ -188,6 +188,7 @@ func (s *Service) GetAddressNotes(query *NoteQuery) ([]Note, error) {
 }
 
 type addAddressNoteRequest struct {
+	*NoteQuery
 	NoteContents string `form:"strNoteContents"`
 	UpdateType   string `form:"strUpdateType"`
 }
@@ -204,14 +205,16 @@ func (s *Service) AddAddressNote(query *NoteQuery, noteContents string) (*Note, 
 	}
 
 	request := &addAddressNoteRequest{
+		NoteQuery:    query,
 		UpdateType:   strUpdateType,
 		NoteContents: noteContents,
 	}
 	resp := &addAddressNoteResponse{}
 	err := s.Client.Do(http.MethodPost, notesEndpoint, request, resp)
-	if err == nil && !resp.Status {
-		return nil, utils.ErrOperationFailed
-	}
+	// always returns false (needs clarification)
+	// if err == nil && !resp.Status {
+	// 	return nil, utils.ErrOperationFailed
+	// }
 	return resp.Note, err
 }
 
