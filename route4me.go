@@ -43,6 +43,7 @@ func NewClient(APIKey string) *Client {
 func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([]byte, error) {
 	var reader io.Reader
 	var byt []byte
+	contentType := "multipart/form-data"
 	//We might change this to == for better accuracy
 	if method != http.MethodGet && method != http.MethodOptions {
 		//Check if the data struct has any postform data to pass to the body
@@ -55,6 +56,7 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 			if err != nil {
 				return byt, err
 			}
+			contentType = "application/json"
 			reader = bytes.NewReader(serialized)
 		}
 	}
@@ -63,6 +65,7 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 	if err != nil {
 		return byt, err
 	}
+	request.Header.Set("Content-Type", contentType)
 
 	params := url.Values{}
 

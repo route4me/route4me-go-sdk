@@ -18,3 +18,14 @@ func TestGetUsers(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestAuth(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	t.Skip("Getting 'invalid character '<' looking for beginning of value'")
+	_, err := service.Authenticate("dddd@yahoo.com", "111111")
+	if err != nil {
+		t.Error(err)
+	}
+}
