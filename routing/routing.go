@@ -150,7 +150,7 @@ func (s *Service) UpdateRoute(route *Route) (*Route, error) {
 }
 
 type deleteRequest struct {
-	RouteID string `json:"route_id"`
+	RouteID string `http:"route_id"`
 }
 
 func (s *Service) DeleteRoutes(routeIDs ...string) ([]Route, error) {

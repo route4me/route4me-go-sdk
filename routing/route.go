@@ -32,8 +32,8 @@ type DataObject struct {
 	Parameters       RouteParameters   `json:"parameters,omitempty"`
 	Addresses        []Address         `json:"addresses,omitempty"`
 	Routes           []Route           `json:"routes,omitempty"`
-	//Links            Links             `json:"links,omitempty"`
-	//TrackingHistory  []TrackingHistory `json:"tracking_history,omitempty"`
+	Links            Links             `json:"links,omitempty"`
+	TrackingHistory  []TrackingHistory `json:"tracking_history,omitempty"`
 }
 
 type Route struct {
