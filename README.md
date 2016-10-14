@@ -1,4 +1,4 @@
-Access Route4Me's logistics-as-a-service API using our Go SDK
+Access Route4Me's logistics-as-a-service API using our Go SDK [![Build Status](https://travis-ci.org/route4me/route4me-go-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-go-sdk)
 -------------------
 
 ## Installation and Usage
@@ -18,7 +18,7 @@ Check the [wiki](https://github.com/route4me/route4me-go-sdk/wiki)
 ### Tests
 
 ```
-go test ./...
+go test -v ./...
 ```
 
 ## Frequently Asked Questions
