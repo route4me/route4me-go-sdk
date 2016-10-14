@@ -153,11 +153,17 @@ type deleteRequest struct {
 	RouteID string `http:"route_id"`
 }
 
-func (s *Service) DeleteRoutes(routeIDs ...string) ([]Route, error) {
+type DeletedRoutes struct {
+	Deleted  bool     `json:"deleted"`
+	RouteID  string   `json:"route_id,omitempty"`
+	RouteIDs []string `json:"route_ids,omitempty"`
+}
+
+func (s *Service) DeleteRoutes(routeIDs ...string) (DeletedRoutes, error) {
 	request := &deleteRequest{
 		RouteID: strings.Join(routeIDs, ","),
 	}
-	resp := []Route{}
+	resp := DeletedRoutes{}
 	return resp, s.Client.Do(http.MethodDelete, routeEndpoint, request, &resp)
 }
 
