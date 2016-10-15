@@ -169,7 +169,6 @@ func TestIntegrationRemoveTerritories(t *testing.T) {
 }
 
 func TestIntegrationUpdateTerritory(t *testing.T) {
-	t.Skip("Throws territory_id is invalid")
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}

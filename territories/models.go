@@ -18,7 +18,7 @@ type AvoidanceZone struct {
 
 type Territory struct {
 	//Territory ID
-	ID       string      `json:"territory_id"`
+	ID       string      `json:"territory_id" http:"territory_id"`
 	Name     string      `json:"territory_name"`
 	Color    string      `json:"territory_color"`
 	MemberID json.Number `json:"member_id"`
