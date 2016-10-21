@@ -4,22 +4,44 @@ import (
 	"net/http"
 
 	"github.com/route4me/route4me-go-sdk"
+	"github.com/route4me/route4me-go-sdk/utils"
 )
 
 const (
-	subUsersEndpoint = "/api/member/view_users.php"
 	authEndpoint     = "/actions/authenticate.php"
 	validateEndpoint = "/datafeed/session/validate_session.php"
-	registerEndpoint = "/actions/register_action.php"
+	endpoint         = "/api.v4/user.php"
 )
 
 type Service struct {
 	Client *route4me.Client
 }
 
-func (s *Service) GetUsers() ([]User, error) {
-	resp := []User{}
-	return resp, s.Client.Do(http.MethodGet, subUsersEndpoint, nil, &resp)
+type usersResponse struct {
+	Results []*Member `json:"results"`
+	Total   int       `json:"total"`
+}
+
+func (s *Service) GetSubusers() ([]*Member, error) {
+	resp := &usersResponse{}
+	return resp.Results, s.Client.Do(http.MethodGet, endpoint, nil, resp)
+}
+
+func (s *Service) Register(member *MemberBase) (*Member, error) {
+	resp := &Member{}
+	return resp, s.Client.Do(http.MethodPost, endpoint, member, resp)
+}
+
+func (s *Service) Delete(memberID int64) (*utils.StatusResponse, error) {
+	resp := &utils.StatusResponse{}
+	return resp, s.Client.Do(http.MethodDelete, endpoint, &struct {
+		MemberID int64 `json:"member_id"`
+	}{MemberID: memberID}, resp)
+}
+
+func (s *Service) Edit(member *Member) (*Member, error) {
+	resp := &Member{}
+	return resp, s.Client.Do(http.MethodPut, endpoint, member, resp)
 }
 
 type authenticationRequest struct {
@@ -56,10 +78,4 @@ func (s *Service) ValidateSession(guid string, memberID int64) (bool, error) {
 	}
 	resp := &validateResponse{}
 	return resp.Authenticated, s.Client.Do(http.MethodGet, validateEndpoint, req, resp)
-}
-
-func (s *Service) RegisterAccount(details *AccountDetails) (*AccountPlan, error) {
-	details.Format = "json"
-	resp := &AccountPlan{}
-	return resp, s.Client.Do(http.MethodPost, registerEndpoint, details, resp)
 }
