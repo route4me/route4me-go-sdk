@@ -1,6 +1,7 @@
 package users
 
 import (
+	"reflect"
 	"testing"
 
 	"github.com/route4me/route4me-go-sdk"
@@ -16,6 +17,26 @@ func TestGetSubusers(t *testing.T) {
 	_, err := service.GetSubusers()
 	if err != nil {
 		t.Error(err)
+	}
+}
+
+func TestGetUserByID(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	users, err := service.GetSubusers()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	user := users[len(users)-1]
+	singleUser, err := service.GetUserByID(user.ID)
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if !reflect.DeepEqual(user, singleUser) {
+		t.Error("Users do not match")
 	}
 }
 

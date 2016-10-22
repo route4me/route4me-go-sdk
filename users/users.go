@@ -17,6 +17,13 @@ type Service struct {
 	Client *route4me.Client
 }
 
+func (s *Service) GetUserByID(id int64) (*Member, error) {
+	mem := &Member{}
+	return mem, s.Client.Do(http.MethodGet, endpoint, &struct {
+		MemberID int64 `http:"member_id"`
+	}{MemberID: id}, mem)
+}
+
 type usersResponse struct {
 	Results []*Member `json:"results"`
 	Total   int       `json:"total"`
