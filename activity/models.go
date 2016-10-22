@@ -15,7 +15,7 @@ type Activity struct {
 	NoteContents *string `json:"note_contents,omitempty"`
 	NoteFile     *string `json:"note_file,omitempty"`
 
-	Member *users.User `json:"member,omitempty"`
+	Member *users.Member `json:"member,omitempty"`
 }
 
 type ActivityType string
