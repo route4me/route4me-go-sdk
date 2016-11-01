@@ -49,6 +49,8 @@ type Order struct {
 	Accepted  bool `json:"is_accepted,omitempty"`
 	Started   bool `json:"is_started,omitempty"`
 	Completed bool `json:"is_completed,omitempty"`
+
+	RouteID string `http:"route_id"`
 }
 
 type Query struct {

@@ -34,7 +34,7 @@ func TestIntegrationGet(t *testing.T) {
 	query := &Query{
 		RouteID: opt.Routes[0].ID,
 	}
-	_, _, err = service.Get(query)
+	_, err = service.Get(query)
 	if err != nil {
 		t.Error(err)
 	}

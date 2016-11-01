@@ -21,9 +21,9 @@ type getResponse struct {
 	Total   int        `json:"total"`
 }
 
-func (s *Service) Get(query *Query) ([]Activity, int, error) {
+func (s *Service) Get(query *Query) ([]Activity, error) {
 	resp := &getResponse{}
-	return resp.Results, resp.Total, s.Client.Do(http.MethodGet, getEndpoint, query, resp)
+	return resp.Results, s.Client.Do(http.MethodGet, getEndpoint, query, resp)
 }
 
 func (s *Service) Log(message string, routeID string) error {
