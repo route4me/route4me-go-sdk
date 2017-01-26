@@ -18,6 +18,7 @@ const (
 	notesEndpoint                = "/actions/addRouteNotes.php"
 	moveRouteDestinationEndpoint = "/actions/route/move_route_destination.php"
 	mergeRoutesEndpoint          = "/actions/merge_routes.php"
+	shareRouteEndpoint           = "/actions/route/share_route.php"
 )
 
 type Service struct {
@@ -177,6 +178,26 @@ func (s *Service) MergeRoutes(routeIDs ...string) error {
 	}
 	resp := &utils.StatusResponse{}
 	err := s.Client.Do(http.MethodPost, mergeRoutesEndpoint, request, resp)
+	if err == nil && !resp.Status {
+		return utils.ErrOperationFailed
+	}
+	return err
+}
+
+type shareRequest struct {
+	RecipientEmail string `form:"recipient_email"`
+	RouteID        string `http:"route_id"`
+	ResponseFormat string `http:"response_format"`
+}
+
+func (s *Service) ShareRoute(routeID string, email string) error {
+	request := &shareRequest{
+		RecipientEmail: email,
+		RouteID:        routeID,
+		ResponseFormat: "json",
+	}
+	resp := &utils.StatusResponse{}
+	err := s.Client.Do(http.MethodPost, shareRouteEndpoint, request, resp)
 	if err == nil && !resp.Status {
 		return utils.ErrOperationFailed
 	}

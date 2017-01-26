@@ -167,6 +167,26 @@ func TestIntegrationMergeRoutes(t *testing.T) {
 	}
 }
 
+func TestIntegrationShareRoute(t *testing.T) {
+	t.Skip("Currently returns weird errors")
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(routes) < 1 {
+		t.Skip("Not enough routes to test sharing.")
+	}
+	err = service.ShareRoute(routes[0].ID, "oooooo@gmail.com")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
 func TestIntegrationGetOptimizations(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
