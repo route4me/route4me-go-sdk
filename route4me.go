@@ -4,8 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"io"
 	"io/ioutil"
+	"mime/multipart"
 	"net/http"
 	"net/url"
 	"strings"
@@ -41,32 +41,40 @@ func NewClient(APIKey string) *Client {
 }
 
 func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([]byte, error) {
-	var reader io.Reader
+	var reader bytes.Buffer
 	var byt []byte
-	contentType := "multipart/form-data"
+	contentType := "application/json"
 	//We might change this to == for better accuracy
 	if method != http.MethodGet && method != http.MethodOptions {
 		//Check if the data struct has any postform data to pass to the body
 		params := utils.StructToURLValues("form", data)
 		if len(params) > 0 {
-			reader = strings.NewReader(params.Encode())
-			// if no, marshall it with json
+			w := multipart.NewWriter(&reader)
+			for key, vals := range params {
+				for _, v := range vals {
+					err := w.WriteField(key, v)
+					if err != nil {
+						return byt, err
+					}
+				}
+			}
+			w.Close()
+			contentType = w.FormDataContentType()
 		} else {
 			serialized, err := json.Marshal(data)
 			if err != nil {
 				return byt, err
 			}
-			contentType = "application/json"
-			reader = bytes.NewReader(serialized)
+			reader.Write(serialized)
 		}
 	}
 
-	request, err := http.NewRequest(method, c.BaseURL+endpoint, reader)
+	request, err := http.NewRequest(method, c.BaseURL+endpoint, &reader)
 	if err != nil {
 		return byt, err
 	}
-	request.Header.Set("Content-Type", contentType)
 
+	request.Header.Set("Content-Type", contentType)
 	params := url.Values{}
 
 	if data != nil {
@@ -75,7 +83,20 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 	}
 	params.Add("api_key", c.APIKey)
 	request.URL.RawQuery = params.Encode()
+
+	//b, err := httputil.DumpRequestOut(request, true)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//fmt.Println(string(b))
+
 	resp, err := c.Client.Do(request)
+
+	// b, err = httputil.DumpResponse(resp, true)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	//fmt.Println(string(b))
 	if err != nil {
 		return byt, err
 	}

@@ -51,11 +51,15 @@ func (s *Service) UpdateOptimization(parameters *OptimizationParameters) (*DataO
 }
 
 type deleteOptimizationRequest struct {
-	OptimizationProblemID string `http:"optimization_problem_id"`
+	OptimizationProblemIDs []string `json:"optimization_problem_ids"`
 }
 
 func (s *Service) DeleteOptimization(optimizationProblemID string) error {
-	return s.Client.Do(http.MethodDelete, optimizationEndpoint, &deleteOptimizationRequest{OptimizationProblemID: optimizationProblemID}, nil)
+	return s.DeleteOptimizations(optimizationProblemID)
+}
+
+func (s *Service) DeleteOptimizations(optimizationProblemID ...string) error {
+	return s.Client.Do(http.MethodDelete, optimizationEndpoint, &deleteOptimizationRequest{OptimizationProblemIDs: optimizationProblemID}, nil)
 }
 
 //Addresses
@@ -168,14 +172,15 @@ func (s *Service) DeleteRoutes(routeIDs ...string) (DeletedRoutes, error) {
 	return resp, s.Client.Do(http.MethodDelete, routeEndpoint, request, &resp)
 }
 
-type mergeRequest struct {
-	RouteIDs []string `json:"route_ids"`
+type MergeRequest struct {
+	RouteIDs       string  `form:"route_ids"`
+	DepotAddress   string  `form:"depot_address"`
+	RemoveOrigin   bool    `form:"remove_origin"`
+	DepotLatitude  float64 `form:"depot_lat"`
+	DepotLongitude float64 `form:"depot_lng"`
 }
 
-func (s *Service) MergeRoutes(routeIDs ...string) error {
-	request := &mergeRequest{
-		RouteIDs: routeIDs,
-	}
+func (s *Service) MergeRoutes(request *MergeRequest) error {
 	resp := &utils.StatusResponse{}
 	err := s.Client.Do(http.MethodPost, mergeRoutesEndpoint, request, resp)
 	if err == nil && !resp.Status {

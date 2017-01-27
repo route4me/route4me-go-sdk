@@ -1,6 +1,7 @@
 package routing
 
 import (
+	"fmt"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -160,7 +161,18 @@ func TestIntegrationMergeRoutes(t *testing.T) {
 	if len(routes) < 2 {
 		t.Skip("Not enough routes to test merging.")
 	}
-	err = service.MergeRoutes(routes[0].ID, routes[1].ID)
+	depot, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
+	fmt.Printf("%+v", depot)
+	if err != nil {
+		t.Skip("Could not fetch route")
+	}
+	err = service.MergeRoutes(&MergeRequest{
+		RouteIDs:       routes[0].ID + "," + routes[1].ID,
+		RemoveOrigin:   false,
+		DepotAddress:   depot.Addresses[0].AddressString,
+		DepotLatitude:  depot.Addresses[0].Latitude,
+		DepotLongitude: depot.Addresses[0].Longitude,
+	})
 	if err != nil {
 		t.Error(err)
 		return
@@ -168,7 +180,6 @@ func TestIntegrationMergeRoutes(t *testing.T) {
 }
 
 func TestIntegrationShareRoute(t *testing.T) {
-	t.Skip("Currently returns weird errors")
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
@@ -216,7 +227,7 @@ func TestIntegrationGetOptimization(t *testing.T) {
 }
 
 func TestIntegrationDeleteOptimization(t *testing.T) {
-	t.Skip("Currently doesn't work")
+	//t.Skip("Currently doesn't work")
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
@@ -288,6 +299,7 @@ func TestIntegrationRunOptimization(t *testing.T) {
 			Longitude:       -81.443351581693,
 			Time:            300,
 			TimeWindowStart: 34801,
+			IsDepot:         false,
 			TimeWindowEnd:   36366},
 
 		&Address{AddressString: "2705 N River Rd, Stow, OH 44224",
@@ -357,6 +369,7 @@ func TestIntegrationRunOptimization(t *testing.T) {
 			Latitude:        41.161357879639,
 			Longitude:       -81.42293548584,
 			Time:            300,
+			IsDepot:         false,
 			TimeWindowStart: 52180,
 			TimeWindowEnd:   54379},
 	}
@@ -544,7 +557,7 @@ func TestIntegrationGetAddressNotes(t *testing.T) {
 }
 
 func TestIntegrationAddAddressNote(t *testing.T) {
-	t.Skip()
+	//	t.Skip()
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
