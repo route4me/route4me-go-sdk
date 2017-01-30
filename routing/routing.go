@@ -21,6 +21,7 @@ const (
 	shareRouteEndpoint           = "/actions/route/share_route.php"
 )
 
+// codebeat:disable[TTOO_MANY_FUNCTIONS]
 type Service struct {
 	Client *route4me.Client
 }
@@ -301,3 +302,4 @@ func (s *Service) MoveDestinationToRoute(query *DestinationMoveRequest) error {
 	}
 	return err
 }
+// codebeat:enable[TTOO_MANY_FUNCTIONS]
