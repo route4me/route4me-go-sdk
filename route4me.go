@@ -40,38 +40,46 @@ func NewClient(APIKey string) *Client {
 	return NewClientWithOptions(APIKey, defaultTimeout, BaseURL)
 }
 
-func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([]byte, error) {
-	var reader bytes.Buffer
-	var byt []byte
-	contentType := "application/json"
-	//We might change this to == for better accuracy
-	if method != http.MethodGet && method != http.MethodOptions {
-		//Check if the data struct has any postform data to pass to the body
-		params := utils.StructToURLValues("form", data)
-		if len(params) > 0 {
-			w := multipart.NewWriter(&reader)
-			for key, vals := range params {
-				for _, v := range vals {
-					err := w.WriteField(key, v)
-					if err != nil {
-						return byt, err
-					}
+func (c *Client) constructBody(data interface{}) (contentType string, reader bytes.Buffer, err error) {
+	//Check if the data struct has any postform data to pass to the body
+	params := utils.StructToURLValues("form", data)
+	if len(params) > 0 {
+		w := multipart.NewWriter(&reader)
+		defer w.Close()
+		for key, vals := range params {
+			for _, v := range vals {
+				err = w.WriteField(key, v)
+				if err != nil {
+					return
 				}
 			}
-			w.Close()
-			contentType = w.FormDataContentType()
-		} else {
-			serialized, err := json.Marshal(data)
-			if err != nil {
-				return byt, err
-			}
-			reader.Write(serialized)
+		}
+		contentType = w.FormDataContentType()
+	} else {
+		var serialized []byte
+		serialized, err = json.Marshal(data)
+		if err != nil {
+			return
+		}
+		contentType = "application/json"
+		reader.Write(serialized)
+	}
+	return
+}
+
+func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) (response []byte, err error) {
+	var requestBody bytes.Buffer
+	var contentType string
+	//We might change this to == for better accuracy
+	if method != http.MethodGet && method != http.MethodOptions {
+		if contentType, requestBody, err = c.constructBody(data); err != nil {
+			return response, err
 		}
 	}
 
-	request, err := http.NewRequest(method, c.BaseURL+endpoint, &reader)
+	request, err := http.NewRequest(method, c.BaseURL+endpoint, &requestBody)
 	if err != nil {
-		return byt, err
+		return response, err
 	}
 
 	request.Header.Set("Content-Type", contentType)
@@ -98,14 +106,14 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) ([
 	// }
 	//fmt.Println(string(b))
 	if err != nil {
-		return byt, err
+		return response, err
 	}
 	defer resp.Body.Close()
-	byt, err = ioutil.ReadAll(resp.Body)
+	response, err = ioutil.ReadAll(resp.Body)
 	if resp.StatusCode != http.StatusOK {
-		return byt, InvalidStatusCode
+		return response, InvalidStatusCode
 	}
-	return byt, err
+	return response, err
 }
 
 func (c *Client) Do(method string, endpoint string, data interface{}, out interface{}) error {
