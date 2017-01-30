@@ -120,23 +120,27 @@ func (c *Client) Do(method string, endpoint string, data interface{}, out interf
 	read, err := c.DoNoDecode(method, endpoint, data)
 	//Error handling is a bit weird
 	if err != nil {
-		//Check if invalid status code - errors:[] response is returned only when statuscode is not 200
-		if err == InvalidStatusCode {
-			errs := &ErrorResponse{}
-			//Try to parse to ErrorResponse
-			unmerr := json.Unmarshal(read, errs)
-			//Sometimes (status code: 500,404) errors:[] might not be returned, we return the err from the request when it happens
-			if unmerr != nil {
-				return err
-			}
-			//Join all errors in the ErrorResponse
-			return errors.New(strings.Join(errs.Errors, ","))
-		}
-		return err
+		return c.parseErrors(read, err)
 	}
 	if out == nil {
 		return err
 	}
 	err = json.Unmarshal(read, out)
+	return err
+}
+
+func (c *Client) parseErrors(data []byte, err error) error {
+	//Check if invalid status code - errors:[] response is returned only when statuscode is not 200
+	if err == InvalidStatusCode {
+		errs := &ErrorResponse{}
+		//Try to parse to ErrorResponse
+		unmerr := json.Unmarshal(data, errs)
+		//Sometimes (status code: 500,404) errors:[] might not be returned, we return the err from the request when it happens
+		if unmerr != nil {
+			return err
+		}
+		//Join all errors in the ErrorResponse
+		return errors.New(strings.Join(errs.Errors, ","))
+	}
 	return err
 }
