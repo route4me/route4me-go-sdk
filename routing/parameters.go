@@ -67,6 +67,7 @@ const (
 	Miles      DistanceUnit = "mi"
 )
 
+// codebeat:disable[TOO_MANY_IVARS]
 type RouteParameters struct {
 
 	//let the R4M api know if this sdk request is coming from a file upload within your environment (for analytics)
@@ -198,3 +199,4 @@ type RouteParameters struct {
 
 	OptimizationQuality OptimizationQuality `json:"optimization_quality,omitempty"`
 }
+// codebeat:enable[TOO_MANY_IVARS]

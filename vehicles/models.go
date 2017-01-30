@@ -2,6 +2,7 @@ package vehicles
 
 import "encoding/json"
 
+// codebeat:disable[TOO_MANY_IVARS]
 type Vehicle struct {
 	ID           string      `json:"vehicle_id"`
 	CreatedTime  string      `json:"created_time"`
@@ -24,3 +25,4 @@ type Vehicle struct {
 	HeightInches json.Number `json:"height_inches,omitempty"`
 	WeightLB     json.Number `json:"weight_lb,omitempty"`
 }
+// codebeat:enable[TOO_MANY_IVARS]
