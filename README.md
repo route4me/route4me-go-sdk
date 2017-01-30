@@ -2,6 +2,7 @@ Access Route4Me's logistics-as-a-service API using our Go SDK
 
 [![Build Status](https://travis-ci.org/route4me/route4me-go-sdk.svg?branch=master)](https://travis-ci.org/route4me/route4me-go-sdk)
 [![codebeat badge](https://codebeat.co/badges/6958693a-5709-4a2b-8584-78f87d8cac4f)](https://codebeat.co/projects/github-com-route4me-route4me-go-sdk)
+[![Coverage Status](https://coveralls.io/repos/github/route4me/route4me-go-sdk/badge.svg?branch=master)](https://coveralls.io/github/route4me/route4me-go-sdk?branch=master)
 
 -------------------
 
