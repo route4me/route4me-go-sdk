@@ -43,27 +43,27 @@ func NewClient(APIKey string) *Client {
 func (c *Client) constructBody(data interface{}) (contentType string, reader bytes.Buffer, err error) {
 	//Check if the data struct has any postform data to pass to the body
 	params := utils.StructToURLValues("form", data)
-	if len(params) > 0 {
-		w := multipart.NewWriter(&reader)
-		defer w.Close()
-		for key, vals := range params {
-			for _, v := range vals {
-				err = w.WriteField(key, v)
-				if err != nil {
-					return
-				}
-			}
-		}
-		contentType = w.FormDataContentType()
-	} else {
-		var serialized []byte
-		serialized, err = json.Marshal(data)
-		if err != nil {
+	// if there are no form parameters, it's likely the request is a json
+	if len(params) == 0 {
+		if err = json.NewEncoder(&reader).Encode(data); err != nil {
 			return
 		}
 		contentType = "application/json"
-		reader.Write(serialized)
+		return
 	}
+
+	//otherwise we encode the form as a multipart form
+	w := multipart.NewWriter(&reader)
+	defer w.Close()
+	for key, vals := range params {
+		for _, v := range vals {
+			err = w.WriteField(key, v)
+			if err != nil {
+				return
+			}
+		}
+	}
+	contentType = w.FormDataContentType()
 	return
 }
 
