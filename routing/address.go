@@ -8,7 +8,6 @@ type AddressQuery struct {
 	Notes              bool   `http:"notes"`
 }
 
-// codebeat:disable[TOO_MANY_IVARS]
 type Address struct {
 	AbnormalTrafficTimeToNextDestination int               `json:"abnormal_traffic_time_to_next_destination,omitempty"`
 	AccountNo                            string            `json:"account_no,omitempty"`
@@ -106,7 +105,6 @@ type Manifest struct {
 	RunningWaitTime          int     `json:"running_wait_time,omitempty"`
 	TimeImpact               int     `json:"time_impact,omitempty"`
 }
-// codebeat:enable[TOO_MANY_IVARS]
 
 type PathToNext struct {
 	Lat float64 `json:"lat,omitempty"`

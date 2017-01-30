@@ -2,7 +2,6 @@ package tracking
 
 import "github.com/route4me/route4me-go-sdk/routing"
 
-// codebeat:disable[TOO_MANY_IVARS]
 type GPS struct {
 	Format          string             `http:"format"`
 	MemberID        int                `http:"member_id"`
@@ -19,4 +18,3 @@ type GPS struct {
 	DeviceTimestamp string             `http:"device_timestamp"`
 	AppVersion      string             `http:"app_version"`
 }
-// codebeat:enable[TOO_MANY_IVARS]
