@@ -7,6 +7,7 @@ import (
 )
 
 //https://gist.github.com/tonyhb/5819315#file-main-go-L32
+// codebeat:disable[ABC]
 func StructToURLValues(tag string, i interface{}) url.Values {
 	values := url.Values{}
 	iVal := reflect.ValueOf(i).Elem()
@@ -38,6 +39,7 @@ func StructToURLValues(tag string, i interface{}) url.Values {
 	}
 	return values
 }
+// codebeat:enable[ABC]
 
 func isEmptyValue(v reflect.Value) bool {
 	switch v.Kind() {
