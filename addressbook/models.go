@@ -16,6 +16,10 @@ type Contact struct {
 	ZIP         string  `json:"address_zip,omitempty"`
 	CachedLat   float64 `json:"cached_lat"`
 	CachedLng   float64 `json:"cached_lng"`
+	Icon        string  `json:"address_icon,omitempty"`
+	Color       string  `json:"color,omitempty"`
+	CurbsideLat float64 `json:"curbside_lat,omitempty"`
+	CurbsideLng float64 `json:"curbside_lng,omitempty"`
 }
 
 type Query struct {

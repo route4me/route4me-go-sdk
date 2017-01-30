@@ -43,6 +43,9 @@ func TestIntegrationAdd(t *testing.T) {
 		CountryID:   "3",
 		City:        "City",
 		ZIP:         "00-000",
+		CurbsideLat: 38.024654,
+		CurbsideLng: -77.338814,
+		Color:       "fffeee",
 	}
 	query := &Query{
 		Limit:  0,
