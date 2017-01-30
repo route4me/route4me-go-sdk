@@ -1,5 +1,6 @@
 package addressbook
 
+// codebeat:disable[TOO_MANY_IVARS]
 type Contact struct {
 	ID          uint64  `json:"address_id,omitempty"`
 	Group       string  `json:"address_group,omitempty"`
@@ -28,3 +29,4 @@ type Query struct {
 	Fields    string `http:"fields"`
 	Display   string `http:"display"`
 }
+// codebeat:enable[TOO_MANY_IVARS]
