@@ -2,6 +2,7 @@ package geocoding
 
 import (
 	"testing"
+	"time"
 
 	"github.com/route4me/route4me-go-sdk"
 )
@@ -28,6 +29,23 @@ func TestIntegrationReverseAddress(t *testing.T) {
 		t.Error(err)
 	} else if len(geo) == 0 {
 		t.Error("Received empty result set, wrong parameters(?)")
+	}
+}
+
+func TestRapidServiceCreation(t *testing.T) {
+	rapid := NewRapidService("123")
+	if rapid.client.APIKey != "123" {
+		t.Error("API key not forwarded to underlying client.")
+	}
+	if rapid.client.BaseURL != RapidBaseURL {
+		t.Error("BaseURL not forwarded to underlying client.")
+	}
+	rapid = NewRapidServiceWithOptions("1235", 5*time.Second, "https://example.com")
+	if rapid.client.APIKey != "1235" {
+		t.Error("API key not forwarded to underlying client.")
+	}
+	if rapid.client.BaseURL != "https://example.com" {
+		t.Error("BaseURL not forwarded to underlying client.")
 	}
 }
 
