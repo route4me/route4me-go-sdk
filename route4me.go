@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	defaultTimeout time.Duration = time.Minute * 30
+	DefaultTimeout time.Duration = time.Minute * 30
 	BaseURL                      = "https://www.route4me.com"
 )
 
@@ -37,7 +37,7 @@ func NewClientWithOptions(APIKey string, timeout time.Duration, baseURL string) 
 
 // NewClient creates a route4me client
 func NewClient(APIKey string) *Client {
-	return NewClientWithOptions(APIKey, defaultTimeout, BaseURL)
+	return NewClientWithOptions(APIKey, DefaultTimeout, BaseURL)
 }
 
 func (c *Client) constructBody(data interface{}) (contentType string, reader bytes.Buffer, err error) {
@@ -92,11 +92,11 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) (r
 	params.Add("api_key", c.APIKey)
 	request.URL.RawQuery = params.Encode()
 
-	//b, err := httputil.DumpRequestOut(request, true)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//fmt.Println(string(b))
+	// b, err := httputil.DumpRequestOut(request, true)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// fmt.Println(string(b))
 
 	resp, err := c.Client.Do(request)
 
@@ -136,7 +136,7 @@ func (c *Client) parseErrors(data []byte, err error) error {
 		//Try to parse to ErrorResponse
 		unmerr := json.Unmarshal(data, errs)
 		//Sometimes (status code: 500,404) errors:[] might not be returned, we return the err from the request when it happens
-		if unmerr != nil {
+		if unmerr != nil || len(errs.Errors) == 0 {
 			return err
 		}
 		//Join all errors in the ErrorResponse
