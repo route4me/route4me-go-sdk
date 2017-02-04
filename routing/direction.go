@@ -1,5 +1,7 @@
 package routing
 
+import "github.com/route4me/route4me-go-sdk/geocoding"
+
 type Direction struct {
 	Location *Location `json:"location,omitempty"`
 	Steps    []Steps   `json:"steps,omitempty"`
@@ -16,12 +18,12 @@ type Location struct {
 }
 
 type Steps struct {
-	CompassDirection string               `json:"compass_direction,omitempty"`
-	Direction        string               `json:"direction,omitempty"`
-	Directions       string               `json:"directions,omitempty"`
-	Distance         float64              `json:"distance,omitempty"`
-	DistanceUnit     string               `json:"distance_unit,omitempty"`
-	DurationSec      int                  `json:"duration_sec,omitempty"`
-	ManeuverPoint    *CurbsideCoordinates `json:"maneuverPoint,omitempty"`
-	ManeuverType     string               `json:"maneuverType,omitempty"`
+	CompassDirection string                 `json:"compass_direction,omitempty"`
+	Direction        string                 `json:"direction,omitempty"`
+	Directions       string                 `json:"directions,omitempty"`
+	Distance         float64                `json:"distance,omitempty"`
+	DistanceUnit     string                 `json:"distance_unit,omitempty"`
+	DurationSec      int                    `json:"duration_sec,omitempty"`
+	ManeuverPoint    *geocoding.Coordinates `json:"maneuverPoint,omitempty"`
+	ManeuverType     string                 `json:"maneuverType,omitempty"`
 }
