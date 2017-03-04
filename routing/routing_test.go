@@ -78,6 +78,107 @@ func TestIntegrationGetRouteID(t *testing.T) {
 	}
 }
 
+func TestMarkAddressAsDetectedAndDeparted(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(routes) < 1 {
+		t.Skip("Not enough routes to test deleting.")
+	}
+	route, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	route.Addresses[0].IsDeparted = true
+	_, err = service.UpdateAddress(&route.Addresses[0])
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestMarkAddressAsDetectedAndVisited(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(routes) < 1 {
+		t.Skip("Not enough routes to test deleting.")
+	}
+	route, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	route.Addresses[0].IsVisited = true
+	_, err = service.UpdateAddress(&route.Addresses[0])
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestMarkAddressAsVisited(t *testing.T) {
+	t.Skip("Currently returns weird response (single integer?)")
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(routes) < 1 {
+		t.Skip("Not enough routes to test deleting.")
+	}
+	route, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	route.Addresses[0].IsVisited = true
+	_, err = service.MarkAddressAsVisited(&route.Addresses[0])
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestMarkAddressAsDeparted(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	routes, err := service.GetTeamRoutes(&RouteQuery{Limit: 1})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	if len(routes) < 1 {
+		t.Skip("Not enough routes to test deleting.")
+	}
+	route, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	route.Addresses[0].IsDeparted = true
+	_, err = service.MarkAddressAsDeparted(&route.Addresses[0])
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
 func TestIntegrationDeleteRoutes(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")

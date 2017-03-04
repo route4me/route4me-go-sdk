@@ -19,6 +19,8 @@ const (
 	moveRouteDestinationEndpoint = "/actions/route/move_route_destination.php"
 	mergeRoutesEndpoint          = "/actions/merge_routes.php"
 	shareRouteEndpoint           = "/actions/route/share_route.php"
+	updateAddressVisitedEndpoint = "/api/route/mark_address_visited.php"
+	markAddressDepartedEndpoint  = "/api/route/mark_address_departed.php"
 )
 
 // codebeat:disable[TOO_MANY_FUNCTIONS]
@@ -120,6 +122,36 @@ func (s *Service) GetRouteID(problemID string) (string, error) {
 		return response.Routes[0].ID, nil
 	}
 	return "", errors.New("Could not find requested route")
+}
+
+type markAddress struct {
+	RouteID    string `http:"route_id" json:"-"`
+	AddressID  string `http:"address_id" json:"-"`
+	MemberID   int    `http:"member_id" json:"-"`
+	IsVisited  bool   `http:"is_visited" json:"-"`
+	IsDeparted bool   `http:"is_departed" json:"-"`
+}
+
+func (s *Service) MarkAddressAsVisited(address *Address) (bool, error) {
+	req := &markAddress{
+		RouteID:   address.RouteID,
+		AddressID: address.RouteDestinationID.String(),
+		MemberID:  address.MemberID,
+		IsVisited: address.IsVisited,
+	}
+	resp := &utils.StatusResponse{}
+	return resp.Status, s.Client.Do(http.MethodPut, updateAddressVisitedEndpoint, req, resp)
+}
+
+func (s *Service) MarkAddressAsDeparted(address *Address) (bool, error) {
+	req := &markAddress{
+		RouteID:    address.RouteID,
+		AddressID:  address.RouteDestinationID.String(),
+		MemberID:   address.MemberID,
+		IsDeparted: address.IsDeparted,
+	}
+	resp := &utils.StatusResponse{}
+	return resp.Status, s.Client.Do(http.MethodPut, markAddressDepartedEndpoint, req, resp)
 }
 
 type duplicateRouteResponse struct {
@@ -302,4 +334,5 @@ func (s *Service) MoveDestinationToRoute(query *DestinationMoveRequest) error {
 	}
 	return err
 }
+
 // codebeat:enable[TOO_MANY_FUNCTIONS]

@@ -34,11 +34,18 @@ func StructToURLValues(tag string, i interface{}) url.Values {
 			v = strconv.FormatFloat(f.Float(), 'f', 4, 64)
 		case reflect.String:
 			v = f.String()
+		case reflect.Bool:
+			if f.Bool() {
+				v = "1"
+			} else {
+				v = "0"
+			}
 		}
 		values.Set(tag, v)
 	}
 	return values
 }
+
 // codebeat:enable[ABC]
 
 func isEmptyValue(v reflect.Value) bool {
