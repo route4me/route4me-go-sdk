@@ -4,6 +4,8 @@ import (
 	"testing"
 	"time"
 
+	"encoding/json"
+
 	"github.com/route4me/route4me-go-sdk"
 )
 
@@ -18,6 +20,48 @@ func TestIntegrationForwardAddress(t *testing.T) {
 		t.Error(err)
 	} else if len(geo) == 0 {
 		t.Error("Received empty result set, wrong parameters(?)")
+	}
+}
+
+func TestIntegrationForwardBulk(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	data := []byte(`[
+        {
+            "address": "6817 Harrison Rd, Fredericksburg, VA 22407",
+            "email": "MirandaJCohen@dayrep.com",
+            "username": "Reste1982",
+            "web-site": "arridea.com",
+            "phone": "404-317-9869",
+            "first_name": "Miranda",
+            "last_name": "Cohen"
+        },
+        {
+            "address": "7404 Drew Ln, Fredericksburg, VA 22407",
+            "email": "WilliamCBennett@rhyta.com",
+            "username": "Enton1954",
+            "phone": "912-852-2180",
+            "first_name": "William",
+            "last_name": "Bennett"
+        },
+        {
+            "address": "12316 Willow Woods Dr, Fredericksburg, VA 22407",
+            "email": "GeorgeENicholson@armyspy.com",
+            "username": "Smis1967",
+            "phone": "912-852-2180",
+            "first_name": "George",
+            "last_name": "Nicholson"
+        }
+    ]
+`)
+	rows := []Row{}
+	err := json.Unmarshal(data, &rows)
+	if err != nil {
+		t.Error(err)
+	}
+	if _, err := service.ForwardBulk(rows); err != nil {
+		t.Error(err)
 	}
 }
 

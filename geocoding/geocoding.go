@@ -10,9 +10,10 @@ import (
 )
 
 const (
-	RapidBaseURL       = "https://rapid.route4me.com"
-	streetDataEndpoint = "/street_data/"
-	geocoderEndpoint   = "/api/geocoder.php"
+	RapidBaseURL          = "https://rapid.route4me.com"
+	streetDataEndpoint    = "/street_data/"
+	geocoderEndpoint      = "/api/geocoder.php"
+	bulkGeocodingEndpoint = "/actions/upload/json-geocode.php"
 )
 
 type Service struct {
@@ -27,6 +28,15 @@ type geocodeRequest struct {
 func (s *Service) ForwardAddress(address string) ([]Geocoding, error) {
 	geo := []Geocoding{}
 	return geo, s.Client.Do(http.MethodPost, geocoderEndpoint, &geocodeRequest{Addresses: address, Format: "json"}, &geo)
+}
+
+type forwardBulkRequest struct {
+	Rows []Row `json:"rows"`
+}
+
+func (s *Service) ForwardBulk(addresses []Row) (*BulkResponse, error) {
+	resp := &BulkResponse{}
+	return resp, s.Client.Do(http.MethodPost, bulkGeocodingEndpoint, &forwardBulkRequest{Rows: addresses}, resp)
 }
 
 func (s *Service) ReverseAddress(latitude float64, longitude float64) ([]Geocoding, error) {

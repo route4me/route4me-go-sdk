@@ -22,3 +22,19 @@ type Geocoding struct {
 	PostalCode    string        `json:"postalCode,omitempty"`
 	Type          string        `json:"type,omitempty"`
 }
+
+type Row struct {
+	Address   string `json:"address"`
+	Email     string `json:"email"`
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Phone     string `json:"phone"`
+	Username  string `json:"username"`
+	Website   string `json:"web-site"`
+}
+
+type BulkResponse struct {
+	OptimizationProblemID string `json:"optimization_problem_id"`
+	AddressCount          int    `json:"address_count"`
+	Status                bool   `json:"status"`
+}
