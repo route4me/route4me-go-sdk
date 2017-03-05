@@ -104,7 +104,7 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) (r
 	// if err != nil {
 	// 	panic(err)
 	// }
-	//fmt.Println(string(b))
+	// fmt.Println(string(b))
 	if err != nil {
 		return response, err
 	}

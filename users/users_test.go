@@ -4,13 +4,15 @@ import (
 	"reflect"
 	"testing"
 
+	"strings"
+
 	"github.com/route4me/route4me-go-sdk"
 )
 
 var client = route4me.NewClient("11111111111111111111111111111111")
 var service = &Service{Client: client}
 
-func TestGetSubusers(t *testing.T) {
+func TestIntegrationGetSubusers(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
@@ -20,7 +22,7 @@ func TestGetSubusers(t *testing.T) {
 	}
 }
 
-func TestGetUserByID(t *testing.T) {
+func TestIntegrationGetUserByID(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
@@ -40,7 +42,7 @@ func TestGetUserByID(t *testing.T) {
 	}
 }
 
-func TestRegisterDeleteUser(t *testing.T) {
+func TestIntegrationRegisterDeleteUser(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
@@ -67,7 +69,27 @@ func TestRegisterDeleteUser(t *testing.T) {
 	}
 }
 
-func TestEditUser(t *testing.T) {
+func TestIntegrationAuthenticate(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.Authenticate("dddd@yahoo.com", "111111")
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationValidateSession(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.ValidateSession("4552222222", 787544566)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationEditUser(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
@@ -85,6 +107,83 @@ func TestEditUser(t *testing.T) {
 	}
 	if member.Phone != "123452" {
 		t.Error("Edit failed")
+		return
+	}
+}
+
+func TestIntegrationCreateAccount(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.Create(&Account{
+		Industry:  "Gifting",
+		FirstName: "Olman",
+		LastName:  "Oland",
+		Email:     "ololol@outlook.com",
+		AcceptTOS: true,
+		Password:  "111111",
+		Plan:      "enterprise_plan",
+	})
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestIntegrationGetConfigValues(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.GetConfigValues()
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestIntegrationAddConfigEntry(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.AddConfigEntry("config-test-key-go", "config-test-value-go")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestIntegrationGetConfigEntry(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.GetConfigEntry("config-test-key-go")
+	if err != nil {
+		if strings.Contains(err.Error(), "Specific key has not been found") {
+			t.Skip("No key to test against")
+		}
+		t.Error(err)
+		return
+	}
+}
+
+func TestIntegrationUpdateConfigEntry(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.UpdateConfigEntry("config-test-key-go", "config-test-value-go-1")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+}
+
+func TestIntegrationDeleteConfigEntry(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.DeleteConfigEntry("config-test-key-go")
+	if err != nil {
+		t.Error(err)
 		return
 	}
 }

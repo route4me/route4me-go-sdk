@@ -45,6 +45,7 @@ type Member struct {
 
 type Session struct {
 	Status                        bool          `json:"status"`
+	Error                         string        `json:"error,omitempty"`
 	GeocodingService              string        `json:"geocoding_service"`
 	SessionID                     int64         `json:"session_id"`
 	SessionGUID                   string        `json:"session_guid"`
@@ -70,4 +71,10 @@ type Session struct {
 	HideNonFutureRoutes  route4me.Bool `json:"HIDE_NONFUTURE_ROUTES"`
 	ReadOnly             route4me.Bool `json:"READONLY_USER"`
 	AutoLogoutTs         int           `json:"auto_logout_ts"`
+}
+
+type KeyValue struct {
+	MemberID int    `json:"member_id,omitempty"`
+	Key      string `json:"config_key,omitempty"`
+	Value    string `json:"config_value,omitempty"`
 }
