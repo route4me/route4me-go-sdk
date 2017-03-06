@@ -39,6 +39,7 @@ type DataObject struct {
 type Route struct {
 	DataObject
 	ID                        string  `json:"route_id,omitempty" http:"route_id"`
+	OptimalPosition           bool    `json:"optimal_position,omitempty"`
 	MemberID                  uint64  `json:"member_id,omitempty" http:"member_id"`
 	MemberEmail               string  `json:"member_email,omitempty"`
 	VehicleAlias              string  `json:"vehicle_alias,omitempty"`

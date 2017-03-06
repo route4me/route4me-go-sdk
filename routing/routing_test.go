@@ -748,3 +748,13 @@ func TestIntegrationRemoveRouteDestination(t *testing.T) {
 		return
 	}
 }
+
+func TestIntegrationResequenceRoute(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.ResequenceRoute("CA902292134DBC134EAF8363426BD247")
+	if err != nil {
+		t.Error(err)
+	}
+}

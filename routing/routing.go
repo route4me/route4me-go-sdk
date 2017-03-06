@@ -14,6 +14,7 @@ const (
 	addressEndpoint              = "/api.v4/address.php"
 	routeEndpoint                = "/api.v4/route.php"
 	optimizationEndpoint         = "/api.v4/optimization_problem.php"
+	reoptimizeRouteEndpoint      = "/api.v3/route/reoptimize_2.php"
 	duplicateRouteEndpoint       = "/actions/duplicate_route.php"
 	notesEndpoint                = "/actions/addRouteNotes.php"
 	moveRouteDestinationEndpoint = "/actions/route/move_route_destination.php"
@@ -333,6 +334,17 @@ func (s *Service) MoveDestinationToRoute(query *DestinationMoveRequest) error {
 		return utils.ErrOperationFailed
 	}
 	return err
+}
+
+type resequenceRouteRequest struct {
+	RouteID             string        `http:"route_id"`
+	DisableOptimization route4me.Bool `http:"disable_optimization"`
+	Optimize            string        `http:"optimize"`
+}
+
+func (s *Service) ResequenceRoute(routeID string) (bool, error) {
+	resp := &utils.StatusResponse{}
+	return resp.Status, s.Client.Do(http.MethodGet, reoptimizeRouteEndpoint, &resequenceRouteRequest{RouteID: routeID, DisableOptimization: false, Optimize: "Distance;"}, resp)
 }
 
 // codebeat:enable[TOO_MANY_FUNCTIONS]
