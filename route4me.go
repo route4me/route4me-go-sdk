@@ -90,6 +90,7 @@ func (c *Client) DoNoDecode(method string, endpoint string, data interface{}) (r
 		params = utils.StructToURLValues("http", data)
 	}
 	params.Add("api_key", c.APIKey)
+	params.Add("format", "json")
 	request.URL.RawQuery = params.Encode()
 
 	// b, err := httputil.DumpRequestOut(request, true)

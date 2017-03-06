@@ -48,3 +48,66 @@ func TestIntegrationSetGPS(t *testing.T) {
 		return
 	}
 }
+
+func TestIntegrationGetLastLocation(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	oService := &routing.Service{Client: client}
+	opts, err := oService.GetOptimizations(&routing.RouteQuery{
+		Limit: 1,
+	})
+	if err != nil {
+		t.Error("Error occured in external service:", err)
+		return
+	}
+	if len(opts) < 1 {
+		t.Skip("Not enough routes to test activity stream")
+	}
+	opt, err := oService.GetOptimization(&routing.OptimizationParameters{
+		ProblemID: opts[0].ProblemID,
+	})
+	if len(opt.Routes) < 1 {
+		t.Skip("Not enough routes to test activity stream")
+	}
+	_, err = service.GetLastLocation(opt.Routes[0].ID)
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationGetDeviceLocationHistory(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	oService := &routing.Service{Client: client}
+	opts, err := oService.GetOptimizations(&routing.RouteQuery{
+		Limit: 1,
+	})
+	if err != nil {
+		t.Error("Error occured in external service:", err)
+		return
+	}
+	if len(opts) < 1 {
+		t.Skip("Not enough routes to test activity stream")
+	}
+	opt, err := oService.GetOptimization(&routing.OptimizationParameters{
+		ProblemID: opts[0].ProblemID,
+	})
+	if len(opt.Routes) < 1 {
+		t.Skip("Not enough routes to test activity stream")
+	}
+	_, err = service.GetDeviceLocationHistory(&TrackingHistoryQuery{RouteID: opt.Routes[0].ID})
+	if err != nil {
+		t.Error(err)
+	}
+}
+
+func TestIntegrationAssetTracking(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	if _, err := service.TrackAssets("Q7G9P1L9"); err != nil {
+		t.Error(err)
+	}
+}

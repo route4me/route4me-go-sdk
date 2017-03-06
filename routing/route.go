@@ -16,9 +16,9 @@ const (
 
 type TrackingHistory struct {
 	Speed     float64 `json:"s,omitempty"`
-	Latitude  float64 `json:"lt,omitempty"`
-	Longitude float64 `json:"lg,omitempty"`
-	Direction string  `json:"d,omitempty"`
+	Latitude  float64 `json:"lt,string,omitempty"`
+	Longitude float64 `json:"lg,string,omitempty"`
+	Direction int     `json:"d,omitempty"`
 	//TODO: Check format
 	Timestamp         uint64 `json:"ts,string,omitempty"`
 	FriendlyTimestamp string `json:"ts_friendly,omitempty"`
