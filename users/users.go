@@ -38,14 +38,19 @@ func (s *Service) GetSubusers() ([]*Member, error) {
 	return resp.Results, s.Client.Do(http.MethodGet, endpoint, nil, resp)
 }
 
+func (s *Service) RegisterToWebinar(data *WebinarRegistration) (bool, error) {
+	resp := &utils.StatusResponse{}
+	return resp.Status, s.Client.Do(http.MethodPost, webinarEndpoint, data, resp)
+}
+
 func (s *Service) Register(member *MemberBase) (*Member, error) {
 	resp := &Member{}
 	return resp, s.Client.Do(http.MethodPost, endpoint, member, resp)
 }
 
-func (s *Service) Delete(memberID int64) (*utils.StatusResponse, error) {
+func (s *Service) Delete(memberID int64) (bool, error) {
 	resp := &utils.StatusResponse{}
-	return resp, s.Client.Do(http.MethodDelete, endpoint, &struct {
+	return resp.Status, s.Client.Do(http.MethodDelete, endpoint, &struct {
 		MemberID int64 `json:"member_id"`
 	}{MemberID: memberID}, resp)
 }

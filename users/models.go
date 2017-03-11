@@ -78,3 +78,13 @@ type KeyValue struct {
 	Key      string `json:"config_key,omitempty"`
 	Value    string `json:"config_value,omitempty"`
 }
+
+type WebinarRegistration struct {
+	EmailAddress string `json:"email_address"`
+	FirstName    string `json:"first_name"`
+	LastName     string `json:"last_name"`
+	PhoneNumber  string `json:"phone_number"`
+	CompanyName  string `json:"company_name"`
+	MemberID     string `json:"member_id"`
+	WebiinarDate string `json:"webiinar_date"`
+}

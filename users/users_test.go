@@ -22,6 +22,24 @@ func TestIntegrationGetSubusers(t *testing.T) {
 	}
 }
 
+func TestIntegrationRegisterToWebinar(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	_, err := service.RegisterToWebinar(&WebinarRegistration{
+		EmailAddress: "oooooo@yahoo.com",
+		FirstName:    "First Name",
+		LastName:     "Last Name",
+		PhoneNumber:  "454-454544",
+		CompanyName:  "Company",
+		MemberID:     "123456",
+		WebiinarDate: "2016-06-05 10:00:00",
+	})
+	if err != nil {
+		t.Error(err)
+	}
+}
+
 func TestIntegrationGetUserByID(t *testing.T) {
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
@@ -64,7 +82,7 @@ func TestIntegrationRegisterDeleteUser(t *testing.T) {
 		t.Error(err)
 		return
 	}
-	if !resp.Status {
+	if !resp {
 		t.Error("Could not delete account, unknown error occured")
 	}
 }
