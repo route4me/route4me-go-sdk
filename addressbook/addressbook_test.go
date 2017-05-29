@@ -47,28 +47,10 @@ func TestIntegrationAdd(t *testing.T) {
 		CurbsideLng: -77.338814,
 		Color:       "fffeee",
 	}
-	query := &Query{
-		Limit:  0,
-		Offset: 0,
-	}
-	_, total, err := service.Get(query)
+
+	_, err := service.Add(contact)
 	if err != nil {
 		t.Error(err)
-	}
-	newContact, err := service.Add(contact)
-	if err != nil {
-		t.Error(err)
-	}
-	_, newTotal, err := service.Get(query)
-	if err != nil {
-		t.Error(err)
-	}
-	if newTotal-total != 1 {
-		t.Error("Tried to add a contact, but number of contacts has not changed - rerun the test, there's a possiblity of others adding contacts to the test account.")
-	}
-	contact.ID = newContact.ID
-	if !reflect.DeepEqual(contact, newContact) {
-		t.Error("Contacts do not equal")
 	}
 }
 
@@ -80,23 +62,15 @@ func TestIntegrationRemove(t *testing.T) {
 		Limit:  1,
 		Offset: 0,
 	}
-	contacts, total, err := service.Get(query)
+	contacts, _, err := service.Get(query)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	removed, err := service.Delete([]string{strconv.FormatUint(contacts[0].ID, 10)})
+	_, err = service.Delete([]string{strconv.FormatUint(contacts[0].ID, 10)})
 	if err != nil {
 		t.Error(err)
 		return
-	}
-	_, newTotal, err := service.Get(query)
-	if total-newTotal != 1 {
-		t.Error("Tried to remove a contact, but number of contacts has not changed - rerun the test, there's a possiblity of others removing contacts from the test account.")
-		return
-	}
-	if !removed {
-		t.Error("Did not succeed in removing contacts")
 	}
 }
 
