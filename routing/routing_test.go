@@ -1,7 +1,6 @@
 package routing
 
 import (
-	"fmt"
 	"math/rand"
 	"reflect"
 	"strconv"
@@ -129,7 +128,6 @@ func TestMarkAddressAsDetectedAndVisited(t *testing.T) {
 }
 
 func TestMarkAddressAsVisited(t *testing.T) {
-	t.Skip("Currently returns weird response (single integer?)")
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
@@ -250,7 +248,7 @@ func TestIntegrationDuplicateRoute(t *testing.T) {
 }
 
 func TestIntegrationMergeRoutes(t *testing.T) {
-	t.Skip("Currently returns weird errors")
+	t.Skip("Cannot test under test account. 'Point is not allowed for test account'")
 	if testing.Short() {
 		t.Skip("Skipping integration tests in short mode.")
 	}
@@ -262,17 +260,12 @@ func TestIntegrationMergeRoutes(t *testing.T) {
 	if len(routes) < 2 {
 		t.Skip("Not enough routes to test merging.")
 	}
-	depot, err := service.GetRoute(&RouteQuery{ID: routes[0].ID})
-	fmt.Printf("%+v", depot)
-	if err != nil {
-		t.Skip("Could not fetch route")
-	}
 	err = service.MergeRoutes(&MergeRequest{
 		RouteIDs:       routes[0].ID + "," + routes[1].ID,
 		RemoveOrigin:   false,
-		DepotAddress:   depot.Addresses[0].AddressString,
-		DepotLatitude:  depot.Addresses[0].Latitude,
-		DepotLongitude: depot.Addresses[0].Longitude,
+		DepotAddress:   "10180 Dyer St, El Paso, TX 79924, USA",
+		DepotLatitude:  31.9061405,
+		DepotLongitude: -106.4033899,
 	})
 	if err != nil {
 		t.Error(err)
