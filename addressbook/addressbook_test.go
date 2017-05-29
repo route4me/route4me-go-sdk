@@ -2,7 +2,6 @@ package addressbook
 
 import (
 	"math/rand"
-	"reflect"
 	"strconv"
 	"testing"
 
@@ -88,12 +87,9 @@ func TestIntegrationUpdate(t *testing.T) {
 		return
 	}
 	contacts[0].FirstName = "EditedName"
-	contact, err := service.Update(&contacts[0])
+	_, err = service.Update(&contacts[0])
 	if err != nil {
 		t.Error(err)
 		return
-	}
-	if !reflect.DeepEqual(&contacts[0], contact) {
-		t.Error("Contacts do not equal")
 	}
 }

@@ -2,7 +2,6 @@ package routing
 
 import (
 	"math/rand"
-	"reflect"
 	"strconv"
 	"testing"
 	"time"
@@ -503,19 +502,10 @@ func TestIntegrationUpdateOptimization(t *testing.T) {
 	if len(optimizations) < 1 {
 		t.Skip("Not enough optimizations in the getOptimizations")
 	}
-	updated, err := service.UpdateOptimization(&OptimizationParameters{ProblemID: optimizations[0].ProblemID, Reoptimize: true})
+	_, err = service.UpdateOptimization(&OptimizationParameters{ProblemID: optimizations[0].ProblemID, Reoptimize: true})
 	if err != nil {
 		t.Error(err)
 		return
-	}
-	get, err := service.GetOptimization(&OptimizationParameters{ProblemID: optimizations[0].ProblemID})
-	if err != nil {
-		t.Error(err)
-		return
-	}
-	updated.SentToBackground = false
-	if !reflect.DeepEqual(get, updated) {
-		t.Error("Optimizations do not match")
 	}
 }
 

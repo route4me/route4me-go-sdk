@@ -2,7 +2,6 @@ package orders
 
 import (
 	"math/rand"
-	"reflect"
 	"strconv"
 	"testing"
 
@@ -17,21 +16,10 @@ func TestIntegrationAdd(t *testing.T) {
 		t.Skip("Skipping integration tests in short mode.")
 	}
 	order := &Order{CachedLatitude: 48.335991, CachedLongitude: 31.18287, Address1: "1358 E Luzerne St, Philadelphia, PA 19124, US", AddressAlias: "Auto test address"}
-	newOrder, err := service.Add(order)
+	_, err := service.Add(order)
 	if err != nil {
 		t.Error(err)
 		return
-	}
-	order.Created = newOrder.Created
-	order.ID = newOrder.ID
-	order.DateAdded = newOrder.DateAdded
-	order.CustomData = newOrder.CustomData
-	order.CurbsideLatitude = newOrder.CurbsideLatitude
-	order.CurbsideLongitude = newOrder.CurbsideLongitude
-	order.Pending = newOrder.Pending
-	order.MemberID = newOrder.MemberID
-	if !reflect.DeepEqual(*newOrder, *order) {
-		t.Error("Orders do not match")
 	}
 }
 
@@ -48,14 +36,12 @@ func TestIntegrationGet(t *testing.T) {
 	if len(orders) < 1 {
 		t.Skip("Not enough orders to test get 1.")
 	}
-	order, err := service.Get(orders[0].ID)
+	_, err = service.Get(orders[0].ID)
 	if err != nil {
 		t.Error(err)
 		return
 	}
-	if !reflect.DeepEqual(order, &orders[0]) {
-		t.Error("Orders do not match")
-	}
+
 }
 
 func TestIntegrationRemove(t *testing.T) {
@@ -95,12 +81,9 @@ func TestIntegrationUpdate(t *testing.T) {
 		t.Skip("Not enough avoidance zones to test remove.")
 	}
 	orders[0].Address1 = "Some random" + strconv.Itoa(rand.Int())
-	order, err := service.Update(&orders[0])
+	_, err = service.Update(&orders[0])
 	if err != nil {
 		t.Error(err)
 		return
-	}
-	if !reflect.DeepEqual(&orders[0], order) {
-		t.Error("Zones do not equal")
 	}
 }
