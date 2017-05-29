@@ -54,3 +54,12 @@ func TestIntegrationSearchVendors(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestIngegrationCompareVendors(t *testing.T) {
+	if testing.Short() {
+		t.Skip("Skipping integration tests in short mode.")
+	}
+	if _, err := service.CompareVendors(52, 53); err != nil {
+		t.Error(err)
+	}
+}

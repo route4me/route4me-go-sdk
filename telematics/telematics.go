@@ -54,3 +54,12 @@ func (s *TelematicsService) SearchVendors(query *VendorQuery) ([]Vendor, error) 
 	response := &getVendorsResponse{}
 	return response.Vendors, s.client.Do(http.MethodGet, vendorsEndpoint, nil, &response)
 }
+
+type compareVendorsRequest struct {
+	Vendors []int `json:"vendors`
+}
+
+func (s *TelematicsService) CompareVendors(vendors ...int) ([]Vendor, error) {
+	response := &getVendorsResponse{}
+	return response.Vendors, s.client.Do(http.MethodGet, vendorsEndpoint, &compareVendorsRequest{Vendors: vendors}, response)
+}
