@@ -5,7 +5,7 @@ import "github.com/route4me/route4me-go-sdk/users"
 type Activity struct {
 	ID        string       `json:"activity_id,omitempty"`
 	Type      ActivityType `json:"activity_type"`
-	Timestamp uint64       `json:"activity_timestamp,string,omitempty"`
+	Timestamp uint64       `json:"activity_timestamp,omitempty"`
 	Message   string       `json:"activity_message,omitempty"`
 	RouteID   string       `json:"route_destination_id,omitempty"`
 	RouteName string       `json:"route_name,omitempty"`

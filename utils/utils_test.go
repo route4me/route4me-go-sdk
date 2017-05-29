@@ -18,6 +18,7 @@ type testStruct struct {
 	Float32   float32 `http:"float32"`
 	Float64   float64 `http:"float64"`
 	Float64E  float64 `http:"float64e"`
+	Boolean   bool    `http:"boolean"`
 	NoConvert string
 }
 
@@ -34,6 +35,7 @@ func TestStructToURLValues(t *testing.T) {
 		UInt64:    4242,
 		Float64:   -4242,
 		Float32:   15,
+		Boolean:   true,
 		NoConvert: "hey",
 	}
 	urlValues := StructToURLValues("http", test)
