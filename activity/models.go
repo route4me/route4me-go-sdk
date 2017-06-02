@@ -1,6 +1,10 @@
 package activity
 
-import "github.com/route4me/route4me-go-sdk/users"
+import (
+	"time"
+
+	"github.com/route4me/route4me-go-sdk/users"
+)
 
 type Activity struct {
 	ID        string       `json:"activity_id,omitempty"`
@@ -52,9 +56,9 @@ type Query struct {
 	Type     ActivityType `http:"activity_type"`
 	MemberID int          `http:"member_id"`
 	//TODO: Check if it's boolean of string boolean, documentation has two versions
-	Team   bool `http:"team"`
-	Limit  uint `http:"limit"`
-	Offset uint `http:"offset"`
-	Start  uint `http:"start"`
-	End    uint `http:"end"`
+	Team   bool      `http:"team"`
+	Limit  uint      `http:"limit"`
+	Offset uint      `http:"offset"`
+	Start  time.Time `http:"start"`
+	End    time.Time `http:"end"`
 }
